@@ -1,0 +1,9 @@
+Manage Projects Workers and Contacts with Liferay portlets.
+
+Mpwc-project is a Liferay portlet used to manage projects from a business.
+
+It uses Mpwc-portlet services jar to access a database. If you want to see the services code, check the next URL:
+
+https://github.com/rsicart/mpwc
+
+R.Sicart
