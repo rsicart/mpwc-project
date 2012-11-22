@@ -20,8 +20,8 @@
 
 This is the <b>ProjectPortlet</b> portlet in View mode.
 
-<portlet:renderURL var="addProjectURL">
+<portlet:actionURL var="preAddProjectURL" name="preAddProject">
 	<portlet:param name="jspPage" value="/jsp/add.jsp"/>
-</portlet:renderURL>
+</portlet:actionURL>
 
-<a href="<%= addProjectURL %>">Go to add</a>
+<a href="<%= preAddProjectURL %>">Go to add</a>

@@ -25,6 +25,18 @@ import com.mpwc.service.ProjectLocalServiceUtil;
  */
 public class ProjectPortlet extends MVCPortlet {
  
+	
+	public void preAddProject(ActionRequest actionRequest, ActionResponse actionResponse)
+	   	       throws IOException, PortletException{
+		
+		//create an empty project
+		Project project = ProjectLocalServiceUtil.createProject(0);
+		//pass it to the view (useBean to catch it)
+		actionRequest.setAttribute("project", project);
+        actionResponse.setRenderParameter("jspPage", "/jsp/add.jsp");
+	}
+	
+	
 	public void addProject(ActionRequest actionRequest, ActionResponse actionResponse)
 	   	       throws IOException, PortletException{
 	     	
@@ -39,6 +51,8 @@ public class ProjectPortlet extends MVCPortlet {
 	     	boolean canSetTime = Boolean.valueOf(actionRequest.getParameter("cansetworkerhours"));
 	     	String startDate = actionRequest.getParameter("startDate");
 	     	String endDate = actionRequest.getParameter("endDate");
+	     	startDate ="2000-01-01";
+	     	endDate ="2000-01-02";
 	     	String comments = actionRequest.getParameter("comments");
 	     	long status = Long.parseLong(actionRequest.getParameter("status"));
 	     	

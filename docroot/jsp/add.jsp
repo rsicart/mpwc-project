@@ -40,6 +40,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <%@include file="/jsp/init.jsp" %>
 
+<jsp:useBean id="project" type="com.mpwc.model.Project" scope="request" />
 
 <% 
 locale = request.getLocale();
@@ -62,76 +63,72 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 
 	<aui:layout>
  		
- 	<aui:column columnWidth="25" first="true">
+ 	<aui:column columnWidth="50" first="true">
  	
  		<aui:fieldset>
 
 			<aui:input label='<%= res.getString("formlabel.projectname") %>' name="name" type="text" value="">
 				<aui:validator name="required" />
-				<!-- Only allow alphabetical characters -->
-	     		<aui:validator name="alpha" />
+				<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{1,100}/g; return (patt.test(val) ) }
+				</aui:validator>
 			</aui:input>
-	
-		    <aui:input label='<%= res.getString("formlabel.projecttype") %>' name="type" type="text" value="">
-		    	<aui:validator name="required" />
-				<!-- Only allow alphabetical characters -->
-	     		<aui:validator name="alpha" />
-		    </aui:input>
+		    
+		    
 	
 			<aui:input label='<%= res.getString("formlabel.projectdescshort") %>' name="descshort" type="text" value="" >
-				<!-- Only allow numeric format -->
-	     		<aui:validator name="digits" />
+				<aui:validator name="required" />
+				<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{1,100}/g; return (patt.test(val) ) }
+				</aui:validator>
 			</aui:input>
 			
 	   		<aui:input label='<%= res.getString("formlabel.projectdescfull") %>' type="textarea" name="descfull" value="" >
 				<!-- Only allow alphanumeric format -->
-	     		<aui:validator name="alphanum" />
+	     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+				</aui:validator>
 			</aui:input>
 			
-			<aui:input label='<%= res.getString("formlabel.projectcostestimated") %>' name="costestimatedeuros" type="text" value="" >
-				<!-- Only allow numeric format -->
-	     		<aui:validator name="digits" />
-			</aui:input>
-			
-			<aui:input label='<%= res.getString("formlabel.projecttimeestimated") %>' name="timeestimatedhours" type="text" value="" >
-				<!-- Only allow numeric format -->
-	     		<aui:validator name="digits" />
-			</aui:input>
-			
-			<aui:input label='<%= res.getString("formlabel.projectcansethours") %>' name="cansetworkerhours" type="text" value="" >
-				<!-- Only allow numeric format -->
-	     		<aui:validator name="digits" />
-			</aui:input>
 			<% 
 			Calendar startDate = CalendarFactoryUtil.getCalendar();
 			startDate.setTime(startDate.getTime());
-			
-			//TODO: repair datepicker
 			%>
-			<aui:input label='<%= res.getString("formlabel.startdate") %>' name="startDate" model="<%= Project.class %>"  value="<%= startDate %>" />
+			<aui:input label='<%= res.getString("formlabel.startdate") %>' name="startDate" model="<%= Project.class %>" bean="<%= project %>" value="<%= startDate %>" />
 			
 			
 			<% 
 			Calendar endDate = CalendarFactoryUtil.getCalendar();
 			endDate.setTime(endDate.getTime());
-			
-			//TODO: repair datepicker
 			%>
-			<aui:input label='<%= res.getString("formlabel.enddate") %>' name="endDate" model="<%= Project.class %>" value="<%= endDate %>" />
+			<aui:input label='<%= res.getString("formlabel.enddate") %>' name="endDate" model="<%= Project.class %>" bean="<%= project %>" value="<%= endDate %>" />
 
 			
 			<aui:input label='<%= res.getString("formlabel.comments") %>' name="comments" type="text" value="" >
-				<!-- Only allow numeric format -->
-	     		<aui:validator name="alhpa" />
+	     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+				</aui:validator>
 			</aui:input>
 			
 		</aui:fieldset>
 	
 	</aui:column>
 	
-	<aui:column columnWidth="25" first="true">
+	<aui:column columnWidth="50" last="true">
 	
 		<aui:fieldset>
+		
+			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
+				<aui:option value="-1">
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option value="1">
+					<liferay-ui:message key="form-option-type-project" />
+				</aui:option>
+				<aui:option value="2">
+					<liferay-ui:message key="form-option-type-service" />
+				</aui:option>
+			</aui:select>
 			
 			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
 				<aui:option value="-1">
@@ -140,6 +137,28 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1"></aui:option>
 				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2"></aui:option>
 				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3"></aui:option>
+			</aui:select>
+			
+			<aui:input label='<%= res.getString("formlabel.projectcostestimated") %>' name="costestimatedeuros" type="text" value="" >
+				<!-- Only allow numeric format -->
+	     		<aui:validator name="number" />
+			</aui:input>
+			
+			<aui:input label='<%= res.getString("formlabel.projecttimeestimated") %>' name="timeestimatedhours" type="text" value="" >
+				<!-- Only allow numeric format -->
+	     		<aui:validator name="number" />
+			</aui:input>
+			
+		    <aui:select label='<%= res.getString("formlabel.projectcansethours") %>' name="cansetworkerhours">
+				<aui:option value="-1">
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option value="0">
+					<liferay-ui:message key="form-option-no" />
+				</aui:option>
+				<aui:option value="1">
+					<liferay-ui:message key="form-option-yes" />
+				</aui:option>
 			</aui:select>
 			
 		</aui:fieldset>
