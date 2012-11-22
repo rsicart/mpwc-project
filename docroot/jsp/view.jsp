@@ -19,3 +19,9 @@
 <portlet:defineObjects />
 
 This is the <b>ProjectPortlet</b> portlet in View mode.
+
+<portlet:renderURL var="addProjectURL">
+	<portlet:param name="jspPage" value="/jsp/add.jsp"/>
+</portlet:renderURL>
+
+<a href="<%= addProjectURL %>">Go to add</a>
