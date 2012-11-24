@@ -38,21 +38,10 @@ POSSIBILITY OF SUCH DAMAGE.
  */
 -->
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
-
-<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
-<%@ page import="com.liferay.portal.kernel.util.Validator" %>
-<%@ page import="javax.portlet.PortletPreferences" %>
-<%@ page import="com.mpwc.model.Worker" %>
-<%@ page import="com.mpwc.service.WorkerLocalServiceUtil" %>
-<%@ page import="java.util.ResourceBundle" %>
-<%@ page import="java.util.Locale" %>
-
-<portlet:defineObjects />
+<%@include file="/jsp/init.jsp" %>
 
 <% 
-Locale locale = request.getLocale();
+locale = request.getLocale();
 String language = locale.getLanguage();
 String country = locale.getCountry();
 
@@ -62,72 +51,130 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 <p><b><%= res.getString("jspedit.maintitle") %></b></p>
 
 <%
-	long workerId = Long.valueOf( renderRequest.getParameter("workerId") );
+	long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
 
-	Worker w = WorkerLocalServiceUtil.getWorker(workerId);
+	Project p = ProjectLocalServiceUtil.getProject(projectId);
+	
+	System.out.println("edit.jsp projectId"+projectId+" - p projectId"+p.getProjectId());
 
 %>
 
-<portlet:actionURL var="editWorkerURL" name="editWorker">
-    <portlet:param name="mvcPath" value="/jsp/list.jsp" />
-    <portlet:param name="workerId" value="<%= String.valueOf( w.getWorkerId() ) %>" />
+<portlet:actionURL var="editProjectURL" name="editProject">
+    <portlet:param name="mvcPath" value="/jsp/view.jsp" />
+    <portlet:param name="projectId" value="<%= String.valueOf( p.getProjectId() ) %>" />
 </portlet:actionURL>
 
-<aui:form action="<%= editWorkerURL %>" method="post">
+<aui:form action="<%= editProjectURL %>" method="post">
 	
 	<aui:input type="hidden" name="redirectURL" value="<%= renderResponse.createRenderURL().toString() %>"/>
 
 	<aui:layout>
  		
- 	<aui:column columnWidth="25" first="true">
+ 	<aui:column columnWidth="50" first="true">
  	
  		<aui:fieldset>
- 		
-		<aui:input label='<%= res.getString("formlabel.name") %>' name="name" type="text" value="<%= w.getName() %>" >
-			<aui:validator name="required" />
-			<!-- Only allow alphabetical characters -->
-     		<aui:validator name="alpha" />
-		</aui:input>
-	    <aui:input label='<%= res.getString("formlabel.surname") %>' name="surname" type="text" value="<%= w.getSurname() %>" >
-			<aui:validator name="required" />
-			<!-- Only allow alphabetical characters -->
-     		<aui:validator name="alpha" />
-		</aui:input>
-		<aui:input label='<%= res.getString("formlabel.phone") %>' name="phone" type="text" value="<%= w.getPhone() %>" >
-			<!-- Only allow numbers -->
-     		<aui:validator name="digits" />
-		</aui:input>
-		
-		<aui:input type="textarea" name="comments" value="<%= w.getComments() %>" >
-			<!-- Only allow alphabetical characters -->
-     		<aui:validator name="alphanum" />
-		</aui:input>
-		
+
+			<aui:input label='<%= res.getString("formlabel.projectname") %>' name="name" type="text" value="<%= p.getName() %>">
+				<aui:validator name="required" />
+				<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{1,100}/g; return (patt.test(val) ) }
+				</aui:validator>
+			</aui:input>
+	
+			<aui:input label='<%= res.getString("formlabel.projectdescshort") %>' name="descshort" type="text" value="<%= p.getDescShort() %>" >
+				<aui:validator name="required" />
+				<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{1,100}/g; return (patt.test(val) ) }
+				</aui:validator>
+			</aui:input>
+			
+	   		<aui:input label='<%= res.getString("formlabel.projectdescfull") %>' type="textarea" name="descfull" value="<%= p.getDescFull() %>" >
+				<!-- Only allow alphanumeric format -->
+	     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+				</aui:validator>
+			</aui:input>
+			
+			<% 
+			Calendar startDate = CalendarFactoryUtil.getCalendar();
+			startDate.setTime(p.getStartDate());
+			%>
+			<aui:input label='<%= res.getString("formlabel.startdate") %>' name="startDate" model="<%= Project.class %>" bean="<%= p %>" value="<%= startDate %>" />
+			
+			<% 
+			Calendar endDate = CalendarFactoryUtil.getCalendar();
+			endDate.setTime(p.getEndDate());
+			%>
+			<aui:input label='<%= res.getString("formlabel.enddate") %>' name="endDate" model="<%= Project.class %>" bean="<%= p %>" value="<%= endDate %>" />
+			
+			<aui:input label='<%= res.getString("formlabel.comments") %>' name="comments" type="text" value="<%= p.getComments() %>" >
+	     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+				</aui:validator>
+			</aui:input>
+			
 		</aui:fieldset>
 	
 	</aui:column>
 	
-	<aui:column columnWidth="25" first="true">
+	<aui:column columnWidth="50" last="true">
 	
 		<aui:fieldset>
 		
-	    <aui:input label='<%= res.getString("formlabel.nif") %>' name="nif" type="text" value="<%= w.getNif() %>" >
-			<aui:validator name="required" />
-			<!-- Only allow alphabetical characters -->
-     		<aui:validator name="alphanum" />
-		</aui:input>
-	    <aui:input label='<%= res.getString("formlabel.email") %>' name="email" type="text" value="<%= w.getEmail() %>" >
-			<aui:validator name="required" />
-			<!-- Only allow email format -->
-     		<aui:validator name="email" />
-		</aui:input>  
-		
-		<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
-			<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1"></aui:option>
-			<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2"></aui:option>
-			<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3"></aui:option>
-		</aui:select>  
-	
+			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
+				<%
+					boolean selTypeProject = false, selTypeService = false;
+					if(p.getType() != null){
+						if(p.getType().equals("project")){
+							selTypeProject = true;
+						} else if( p.getType().equals("service") ){
+							selTypeService = true;
+						}
+					}
+				%>
+				<aui:option value="-1">
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option value="project" selected="<%= selTypeProject %>">
+					<liferay-ui:message key="form-option-type-project" />
+				</aui:option>
+				<aui:option value="service" selected="<%= selTypeService %>">
+					<liferay-ui:message key="form-option-type-service" />
+				</aui:option>
+			</aui:select>
+			
+			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
+				<aui:option value="-1">
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1"></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2"></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3"></aui:option>
+			</aui:select>
+			
+			<aui:input label='<%= res.getString("formlabel.projectcostestimated") %>' name="costestimatedeuros" type="text" value="<%= p.getCostEstimatedEuros() %>" >
+				<!-- Only allow numeric format -->
+	     		<aui:validator name="number" />
+			</aui:input>
+			
+			<aui:input label='<%= res.getString("formlabel.projecttimeestimated") %>' name="timeestimatedhours" type="text" value="<%= p.getTimeEstimatedHours() %>" >
+				<!-- Only allow numeric format -->
+	     		<aui:validator name="number" />
+			</aui:input>
+			
+		    <aui:select label='<%= res.getString("formlabel.projectcansethours") %>' name="cansetworkerhours">
+		    	
+				<aui:option value="-1" >
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option value="0" >
+					<liferay-ui:message key="form-option-no" />
+				</aui:option>
+				<aui:option value="1" >
+					<liferay-ui:message key="form-option-yes" />
+				</aui:option>
+			</aui:select>
+			
 		</aui:fieldset>
 		    
 	</aui:column>

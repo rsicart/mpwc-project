@@ -42,10 +42,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <%
 ResultRow row = (ResultRow) request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-Worker w = (Worker) row.getObject();
+Project p = (Project) row.getObject();
 long groupId = themeDisplay.getLayout().getGroupId();
-String name = Worker.class.getName();
-String primKey = String.valueOf(w.getPrimaryKey());
+String name = Project.class.getName();
+String primKey = String.valueOf(p.getPrimaryKey());
 %>
 
 <liferay-ui:icon-menu>
@@ -53,15 +53,15 @@ String primKey = String.valueOf(w.getPrimaryKey());
 <c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE) %>">
 	<portlet:renderURL var="editURL">
 		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
-		<portlet:param name="workerId" value="<%=primKey %>" />
+		<portlet:param name="projectId" value="<%=primKey %>" />
 	</portlet:renderURL>
 	
 	<liferay-ui:icon image="edit" message="Edit" url="<%= editURL.toString() %>" />
 </c:if>
 
 <c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE) %>">
-	<portlet:actionURL name="deleteWorker" var="deleteURL">
-		<portlet:param name="workerId" value="<%=primKey %>" />
+	<portlet:actionURL name="deleteProject" var="deleteURL">
+		<portlet:param name="projectId" value="<%=primKey %>" />
 		<portlet:param name="redirectURL" value="<%= renderResponse.createRenderURL().toString() %>" />
 	</portlet:actionURL>
 	

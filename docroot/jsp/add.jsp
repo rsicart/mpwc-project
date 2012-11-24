@@ -119,6 +119,7 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 		<aui:fieldset>
 		
 			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
+				<aui:validator name="required" />
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
@@ -131,6 +132,7 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 			</aui:select>
 			
 			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
+				<aui:validator name="required" />
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
@@ -150,6 +152,7 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 			</aui:input>
 			
 		    <aui:select label='<%= res.getString("formlabel.projectcansethours") %>' name="cansetworkerhours">
+		    	<aui:validator name="required" />
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
