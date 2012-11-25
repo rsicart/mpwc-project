@@ -71,6 +71,10 @@ POSSIBILITY OF SUCH DAMAGE.
  Double ftrCostEstimatedEuros = 0.0;
  long ftrTimeEstimatedHours = 0;
  boolean ftrCanSetWorkerHours = false;
+ String ftrComments = "";
+ 
+ Calendar startDate = CalendarFactoryUtil.getCalendar();
+ Calendar endDate = CalendarFactoryUtil.getCalendar();
  
  
  Enumeration<String> sessionParams = request.getSession().getAttributeNames();
@@ -103,6 +107,9 @@ POSSIBILITY OF SUCH DAMAGE.
 	 }
 	 if(decodedName.equals("ftrCanSetHoursWorkers") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
 		 ftrCanSetWorkerHours = Boolean.valueOf( (String) session.getAttribute(attributeName) );
+	 }
+	 if(decodedName.equals("ftrComments") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
+		 ftrComments = (String)session.getAttribute(attributeName);
 	 }
  }
  
@@ -190,7 +197,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		<aui:column columnWidth="30">
 		<aui:fieldset>
 		    <% 
-			Calendar startDate = CalendarFactoryUtil.getCalendar();
+			
 		    if(ftrStartDate != null){
 		    	startDate.setTime(ftrStartDate);
 		    }
@@ -203,7 +210,6 @@ POSSIBILITY OF SUCH DAMAGE.
 			
 			
 			<% 
-			Calendar endDate = CalendarFactoryUtil.getCalendar();
 			if(ftrEndDate != null){
 		    	endDate.setTime(ftrEndDate);
 		    }
@@ -248,16 +254,17 @@ POSSIBILITY OF SUCH DAMAGE.
 	
 	<aui:layout>
 	
-	<aui:column columnWidth="80" first="true">
+	<aui:column columnWidth="90" first="true">
 	
 	<!-- grid -->
 	 
 	<liferay-ui:search-container delta="5">
 	
 	<liferay-ui:search-container-results>
-	<% 
-		//List<Project> tempResults = ProjectLocalServiceUtil.getWorkersByFilters(ftrName, ftrType, ftrDescShort, ftrStartDate.toString(), ftrEndDate.toString(), ftrCostEstimated, ftrTimeEstimated, ftrCanSetWorkerHours, ftrStatus);
-		List<Project> tempResults = ProjectLocalServiceUtil.getProjects(0, 100);
+	<%  
+		List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByFilters(ftrStatus, ftrName, ftrType, ftrDescShort, ftrStartDate, ftrEndDate, ftrCostEstimatedEuros, ftrTimeEstimatedHours, ftrCanSetWorkerHours, ftrComments);
+		//List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByStatusDesc(ftrStatus);
+		//List<Project> tempResults = ProjectLocalServiceUtil.getProjects(0, 100);
 		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = tempResults.size();
 		pageContext.setAttribute("results", results);
@@ -267,7 +274,7 @@ POSSIBILITY OF SUCH DAMAGE.
 	 
 	 <liferay-ui:search-container-row className="com.mpwc.model.Project" keyProperty="projectId" modelVar="project">
 	 	<liferay-ui:search-container-column-text name="Name" property="name" />
-	 	<liferay-ui:search-container-column-text name="Type" property="type" />
+	 	<liferay-ui:search-container-column-text name="Project Type" property="type" />
 	 	<liferay-ui:search-container-column-text name="Desc. Short" property="descShort" />
 	 	<liferay-ui:search-container-column-text name="Start Date" property="startDate" />
 	 	<liferay-ui:search-container-column-text name="End Date" property="endDate" />
@@ -290,7 +297,7 @@ POSSIBILITY OF SUCH DAMAGE.
  	
  	<aui:layout>	
  	
- 	<aui:column columnWidth="20" last="true">
+ 	<aui:column columnWidth="10" last="true">
  	
  		<aui:form name="frm_add_project" action="<%= preAddProjectURL %>" method="post">
  	

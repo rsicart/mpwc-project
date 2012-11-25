@@ -167,10 +167,10 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 				<aui:option value="-1" >
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option value="0" >
+				<aui:option value="false" >
 					<liferay-ui:message key="form-option-no" />
 				</aui:option>
-				<aui:option value="1" >
+				<aui:option value="true" >
 					<liferay-ui:message key="form-option-yes" />
 				</aui:option>
 			</aui:select>
