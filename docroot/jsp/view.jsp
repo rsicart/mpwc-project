@@ -66,14 +66,15 @@ POSSIBILITY OF SUCH DAMAGE.
  String ftrType = "";
  String ftrDescShort = "";
  String ftrStatus = "";
- Date ftrStartDate = new Date();
- Date ftrEndDate = new Date();
+ Date ftrStartDate = null;
+ Date ftrEndDate = null;
  Double ftrCostEstimatedEuros = 0.0;
  long ftrTimeEstimatedHours = 0;
- boolean ftrCanSetWorkerHours = false;
+ boolean ftrCanSetWorkerHours = false; String canSet = null;
  String ftrComments = "";
  
  Calendar startDate = CalendarFactoryUtil.getCalendar();
+ startDate.set(2009, 0, 13); //the magic number
  Calendar endDate = CalendarFactoryUtil.getCalendar();
  
  
@@ -100,12 +101,18 @@ POSSIBILITY OF SUCH DAMAGE.
 		 ftrEndDate = (Date)session.getAttribute(attributeName);
 	 }
 	 if(decodedName.equals("ftrCostEstimatedEuros") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
-		 ftrCostEstimatedEuros = Double.valueOf( (String)session.getAttribute(attributeName) );
+		 String cost = (String)session.getAttribute(attributeName);
+		 if(cost != null && !cost.isEmpty() ){
+		 	ftrCostEstimatedEuros = Double.valueOf( cost );
+		 } else{
+			ftrCostEstimatedEuros = 0.0;  
+		 }
 	 }
 	 if(decodedName.equals("ftrTimeEstimatedHours") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
 		 ftrTimeEstimatedHours = Long.valueOf( (String) session.getAttribute(attributeName) );
 	 }
-	 if(decodedName.equals("ftrCanSetHoursWorkers") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
+	 if(decodedName.equals("ftrCanSetWorkerHours") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
+		 canSet = (String) session.getAttribute(attributeName);
 		 ftrCanSetWorkerHours = Boolean.valueOf( (String) session.getAttribute(attributeName) );
 	 }
 	 if(decodedName.equals("ftrComments") && PortletSessionUtil.decodeScope(attributeName)==PortletSession.PORTLET_SCOPE){
@@ -113,24 +120,25 @@ POSSIBILITY OF SUCH DAMAGE.
 	 }
  }
  
+ System.out.println("view.jsp Filtros recv ** ftrName:"+ftrName+"- ftrType:"+ftrType
+		 +"- ftrDescShort:"+ftrDescShort+"- ftrStatus:"+ftrStatus+"- ftrCostEstimatedEuros:"+ftrCostEstimatedEuros
+		 +"- ftrTimeEstimatedHours:"+ftrTimeEstimatedHours+"- ftrCanSetWorkerHours:"+ftrCanSetWorkerHours
+		 +"- ftrComments:"+ftrComments);
  
  String error2 = "";
  try{
 	 %>
-	
-	<portlet:actionURL var="preAddProjectURL" name="preAddProject">
-		<portlet:param name="jspPage" value="/jsp/add.jsp"/>
-	</portlet:actionURL>
-	
 	<portlet:actionURL var="filterURL" name="getProjectsByFilters">
 	   <portlet:param name="mvcPath" value="/jsp/view.jsp" />
 	</portlet:actionURL>
 	
-	<aui:form name="frm_list_projects" action="<%= filterURL %>" method="post">
+	
+			
+	<aui:layout>
+	
+		<aui:form name="frm_list_projects" action="<%= filterURL %>" method="post">
 	
 		<aui:input type="hidden" name="redirectURL" value="<%= renderResponse.createRenderURL().toString() %>"/>
-			
-		<aui:layout>
 		
 		<aui:column columnWidth="20" first="true">
 		
@@ -150,10 +158,6 @@ POSSIBILITY OF SUCH DAMAGE.
 			<aui:input label='<%= res.getString("formlabel.projectcostestimated") %>' id="ftrcostestimatedeuros" name="ftrcostestimatedeuros" type="text" value="<%= ftrCostEstimatedEuros %>" >
 	     		<aui:validator name="number" />
 			</aui:input>
-			
-			<aui:input label='<%= res.getString("formlabel.projecttimeestimated") %>' id="ftrtimeestimatedhours" name="ftrtimeestimatedhours" type="text" value="<%= ftrTimeEstimatedHours %>" >
-	     		<aui:validator name="number" />
-			</aui:input>
 		    
 		</aui:fieldset>
 		
@@ -163,32 +167,30 @@ POSSIBILITY OF SUCH DAMAGE.
 		
 		<aui:fieldset>
 			
-			<% 
-			 //TODO: save selected option
-			%>
 			<aui:select label='<%= res.getString("formlabel.projecttype") %>' id="ftrtype" name="ftrtype">
-				<aui:option value="-1">
+				<aui:option value="">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option value="1">
+				<aui:option value="project" selected='<%= ( ftrType != null && ftrType.equals("project") ? true : false ) %>'>
 					<liferay-ui:message key="form-option-type-project" />
 				</aui:option>
-				<aui:option value="2">
+				<aui:option value="service" selected='<%= ( ftrType != null && ftrType.equals("service") ? true : false ) %>'>
 					<liferay-ui:message key="form-option-type-service" />
 				</aui:option>
 			</aui:select>
 			
-			<% 
-			 //TODO: save selected option
-			%>
 		    <aui:select label='<%= res.getString("formlabel.status") %>' id="ftrstatus" name="ftrstatus">
-				<aui:option value="-1">
+				<aui:option value="">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1"></aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2"></aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3"></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.active") %>' value='<%= res.getString("formlabel.option.active") %>' selected='<%= ( ftrStatus != null && ftrStatus.equals(res.getString("formlabel.option.active")) ? true : false ) %>'></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value='<%= res.getString("formlabel.option.inactive") %>' selected='<%= ( ftrStatus != null && ftrStatus.equals(res.getString("formlabel.option.inactive")) ? true : false ) %>'></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value='<%= res.getString("formlabel.option.bloqued") %>' selected='<%= ( ftrStatus != null && ftrStatus.equals(res.getString("formlabel.option.bloqued")) ? true : false ) %>'></aui:option>
 			</aui:select>
+			
+			<aui:input label='<%= res.getString("formlabel.projecttimeestimated") %>' id="ftrtimeestimatedhours" name="ftrtimeestimatedhours" type="text" value="<%= ftrTimeEstimatedHours %>" >
+	     		<aui:validator name="number" />
+			</aui:input>
 			
 		</aui:fieldset>
 		
@@ -219,39 +221,61 @@ POSSIBILITY OF SUCH DAMAGE.
 			System.out.println("view.jsp ftrEndDate:"+ftrEndDate+" - endDate:"+endDate.toString());
 			%>
 			<aui:input label='<%= res.getString("formlabel.enddate") %>' name="endDate" model="<%= Project.class %>" value="<%= endDate %>" />
+			
+			<aui:select label='<%= res.getString("formlabel.projectcansethours") %>' id="ftrcansetworkerhours" name="ftrcansetworkerhours">
+				<aui:option value="">
+					<liferay-ui:message key="please-choose" />
+				</aui:option>
+				<aui:option value="false" selected='<%= ( !ftrCanSetWorkerHours ? true : false ) %>'>
+					<liferay-ui:message key="form-option-no" />
+				</aui:option>
+				<aui:option value="true" selected='<%= ( ftrCanSetWorkerHours ? true : false ) %>'>
+					<liferay-ui:message key="form-option-yes" />
+				</aui:option>
+			</aui:select>
 					
 		</aui:fieldset>
 		</aui:column>
 
-		<aui:column columnWidth="30" last="true">
+		<aui:column columnWidth="5">
 		<aui:fieldset>
 		    
-			
-			
-			<% 
-			 //TODO: save selected option
-			%>
-		    <aui:select label='<%= res.getString("formlabel.projectcansethours") %>' id="ftrcansetworkerhours" name="ftrcansetworkerhours">
-				<aui:option value="-1">
-					<liferay-ui:message key="please-choose" />
-				</aui:option>
-				<aui:option value="0">
-					<liferay-ui:message key="form-option-no" />
-				</aui:option>
-				<aui:option value="1">
-					<liferay-ui:message key="form-option-yes" />
-				</aui:option>
-			</aui:select>
-			
 			<aui:button type="submit" id="btn_filter" value='<%= res.getString("formlabel.actionfilter") %>' />
 					
 		</aui:fieldset>
+		
+		</aui:column>
+	
+		</aui:form>
+		
+		<aui:column columnWidth="25" last="true">
+		
+		<aui:fieldset>
+		
+			<portlet:actionURL var="preAddProjectURL" name="preAddProject">
+				<portlet:param name="jspPage" value="/jsp/add.jsp"/>
+			</portlet:actionURL>
+	 		
+	 		<aui:form name="frm_add_project" action="<%= preAddProjectURL %>" method="post">
+	 	
+			 	<aui:fieldset>
+			 	
+			 	<c:if test="<%= permissionChecker.hasPermission(groupId, namePortlet, primKeyPortlet, permAddProject) %>">
+			 		<aui:button type="submit" id="btn_add" value='<%= res.getString("formlabel.actionadd") %>' inlineField="false" />
+			 	</c:if> 	
+			 	
+			 	</aui:fieldset>
+		 	
+		 	</aui:form>	
+		
+		</aui:fieldset>		
+		
 		</aui:column>
 			
 	</aui:layout>
+
 	
-	</aui:form>
-	
+
 	<aui:layout>
 	
 	<aui:column columnWidth="90" first="true">
@@ -262,9 +286,8 @@ POSSIBILITY OF SUCH DAMAGE.
 	
 	<liferay-ui:search-container-results>
 	<%  
-		List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByFilters(ftrStatus, ftrName, ftrType, ftrDescShort, ftrStartDate, ftrEndDate, ftrCostEstimatedEuros, ftrTimeEstimatedHours, ftrCanSetWorkerHours, ftrComments);
+		List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByFilters(ftrStatus, ftrName, ftrType, ftrDescShort, startDate.getTime(), endDate.getTime(), ftrCostEstimatedEuros, ftrTimeEstimatedHours, ftrCanSetWorkerHours, ftrComments);
 		//List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByStatusDesc(ftrStatus);
-		//List<Project> tempResults = ProjectLocalServiceUtil.getProjects(0, 100);
 		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = tempResults.size();
 		pageContext.setAttribute("results", results);
@@ -298,18 +321,8 @@ POSSIBILITY OF SUCH DAMAGE.
  	<aui:layout>	
  	
  	<aui:column columnWidth="10" last="true">
- 	
- 		<aui:form name="frm_add_project" action="<%= preAddProjectURL %>" method="post">
- 	
-	 	<aui:fieldset>
-	 	
-	 	<c:if test="<%= permissionChecker.hasPermission(groupId, namePortlet, primKeyPortlet, permAddProject) %>">
-	 		<aui:button type="submit" id="btn_add" value='<%= res.getString("formlabel.actionadd") %>' inlineField="false" />
-	 	</c:if> 	
-	 	
-	 	</aui:fieldset>
-	 	
-	 	</aui:form>	
+ 		
+
  	
  	</aui:column>
  	

@@ -42,7 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <jsp:useBean id="project" type="com.mpwc.model.Project" scope="request" />
 
-<% 
+<%
 locale = request.getLocale();
 String language = locale.getLanguage();
 String country = locale.getCountry();
@@ -119,20 +119,18 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 		<aui:fieldset>
 		
 			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
-				<aui:validator name="required" />
-				<aui:option value="-1">
+				<aui:option value="">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option value="1">
+				<aui:option value="project">
 					<liferay-ui:message key="form-option-type-project" />
 				</aui:option>
-				<aui:option value="2">
+				<aui:option value="service">
 					<liferay-ui:message key="form-option-type-service" />
 				</aui:option>
 			</aui:select>
 			
 			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
-				<aui:validator name="required" />
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
@@ -152,8 +150,7 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 			</aui:input>
 			
 		    <aui:select label='<%= res.getString("formlabel.projectcansethours") %>' name="cansetworkerhours">
-		    	<aui:validator name="required" />
-				<aui:option value="-1">
+				<aui:option value="">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
 				<aui:option value="false">
