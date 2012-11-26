@@ -130,13 +130,16 @@ public class ProjectPortlet extends MVCPortlet {
 	 				p.setCompanyId(themeDisplay.getCompanyId());
 	 				p.setGroupId(themeDisplay.getScopeGroupId());
 	 		    	
-	 		    	ProjectLocalServiceUtil.addProject(p);
+	 		    	//ProjectLocalServiceUtil.addProject(p);
+	 				ProjectLocalServiceUtil.add(p);
 	 		    	
 	 		    	System.out.println("addProject -" + "groupId:" + p.getGroupId() + "companyId:" + p.getCompanyId());
 	 		    	
 	 			} catch (SystemException e) {
 	 				System.out.println("addProject exception:" + e.getMessage());
-	 			}
+	 			} catch (PortalException e1) {
+	 				System.out.println("addProject exception:" + e1.getMessage());
+				}
 
 	     	}
 
