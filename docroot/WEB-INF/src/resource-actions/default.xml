@@ -9,6 +9,7 @@
 				<action-key>ADD_PROJECT</action-key>
 				<action-key>UPDATE_PROJECT</action-key>
 				<action-key>DELETE_PROJECT</action-key>
+				<action-key>ADD_WORKER_PROJECT</action-key>
 				<action-key>VIEW</action-key>
 			</supports>
 			<site-member-defaults>

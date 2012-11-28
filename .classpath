@@ -18,6 +18,5 @@
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/parra/liferay/liferay-plugins-sdk-6.1.1/portlets/Mpwc-portlet/docroot/WEB-INF/lib/Mpwc-portlet-service.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>

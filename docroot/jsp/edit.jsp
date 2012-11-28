@@ -46,9 +46,18 @@ String language = locale.getLanguage();
 String country = locale.getCountry();
 
 ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale(language, country));
+
+long groupId = themeDisplay.getLayout().getGroupId();
+//portlet permissions
+String namePortlet = portletDisplay.getId(); //default value
+String primKeyPortlet = "projectportlet"; //portlet name
+
+//portlet actions available (see resource-actions/default.xml)
+String permAddWorker = "ADD_WORKER_PROJECT";
+
 %>
 
-<p><b><%= res.getString("jspedit.maintitle") %></b></p>
+<h1><%= res.getString("jspedit.maintitle") %></h1>
 
 <%
 	long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
@@ -122,23 +131,13 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 		<aui:fieldset>
 		
 			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
-				<%
-					boolean selTypeProject = false, selTypeService = false;
-					if(p.getType() != null){
-						if(p.getType().equals("project")){
-							selTypeProject = true;
-						} else if( p.getType().equals("service") ){
-							selTypeService = true;
-						}
-					}
-				%>
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option value="project" selected="<%= selTypeProject %>">
+				<aui:option value="project" selected='<%= ( p.getType().equals("project") ? true : false ) %>'>
 					<liferay-ui:message key="form-option-type-project" />
 				</aui:option>
-				<aui:option value="service" selected="<%= selTypeService %>">
+				<aui:option value="service" selected='<%= ( p.getType().equals("service") ? true : false ) %>'>
 					<liferay-ui:message key="form-option-type-service" />
 				</aui:option>
 			</aui:select>
@@ -147,9 +146,9 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1"></aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2"></aui:option>
-				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3"></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1" selected='<%= ( p.getProjectStatusId()==1 ? true : false ) %>'></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2" selected='<%= ( p.getProjectStatusId()==2 ? true : false ) %>'></aui:option>
+				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3" selected='<%= ( p.getProjectStatusId()==3 ? true : false ) %>'></aui:option>
 			</aui:select>
 			
 			<aui:input label='<%= res.getString("formlabel.projectcostestimated") %>' name="costestimatedeuros" type="text" value="<%= p.getCostEstimatedEuros() %>" >
@@ -167,10 +166,10 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 				<aui:option value="-1" >
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
-				<aui:option value="false" >
+				<aui:option value="false" selected='<%= ( !p.getCanSetWorkerHours() ? true : false ) %>'>
 					<liferay-ui:message key="form-option-no" />
 				</aui:option>
-				<aui:option value="true" >
+				<aui:option value="true" selected='<%= ( p.getCanSetWorkerHours() ? true : false ) %>'>
 					<liferay-ui:message key="form-option-yes" />
 				</aui:option>
 			</aui:select>
@@ -180,6 +179,88 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 	</aui:column>
 	
    </aui:layout>
+   
+   
+	<aui:layout>
+	
+	<aui:column columnWidth="45" first="true">
+	
+	<h2><%= res.getString("jspedit.project.workerlist") %></h2>
+	<!-- project workers grid -->
+	 
+	<liferay-ui:search-container delta="5" emptyResultsMessage="jspedit-message-noworkers">
+	
+	<liferay-ui:search-container-results>
+	<% 
+	try{
+		List<Worker> tempResults = ProjectLocalServiceUtil.getWorkers(p.getProjectId());
+		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
+		total = tempResults.size();
+		pageContext.setAttribute("results", results);
+		pageContext.setAttribute("total",total);
+		System.out.println("edit.jsp total: "+total);
+	} catch(Exception e){
+		System.out.println("edit.jsp exception: "+e.getMessage());
+	}
+	 %>	
+	 </liferay-ui:search-container-results>
+	 
+	 <liferay-ui:search-container-row className="com.mpwc.model.Worker" keyProperty="workerId" modelVar="worker">
+	 	<liferay-ui:search-container-column-text name="Name" property="name" />
+	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
+	 	<liferay-ui:search-container-column-text name="Nif" property="nif" />
+	 	<liferay-ui:search-container-column-text name="Email" property="email" />
+
+	 </liferay-ui:search-container-row>
+	 
+	 <liferay-ui:search-iterator />
+	 
+	 </liferay-ui:search-container>
+	 
+	 <!-- end project workers grid -->
+ 	
+ 	</aui:column>		
+ 	
+ 	<aui:column columnWidth="45" last="true">
+ 	
+ 	<!--list workers grid -->
+ 	
+	<h2><%= res.getString("jspedit.project.fullworkerlist") %></h2>
+	<!-- grid -->
+	 
+	<liferay-ui:search-container delta="5" emptyResultsMessage="jspedit-message-noworkers">
+	
+	<liferay-ui:search-container-results>
+	<% 
+	try{
+		List<Worker> fullworkerResults = WorkerLocalServiceUtil.getWorkersByFilters(null, null, null, null, null, null);
+		results = ListUtil.subList(fullworkerResults, searchContainer.getStart(),searchContainer.getEnd());
+		total = fullworkerResults.size();
+		pageContext.setAttribute("results", results);
+		pageContext.setAttribute("total",total);
+	} catch(Exception e){
+		System.out.println("edit.jsp exception: "+e.getMessage());
+	}
+	 %>	
+	 </liferay-ui:search-container-results>
+	 
+	 <liferay-ui:search-container-row className="com.mpwc.model.Worker" keyProperty="workerId" modelVar="worker">
+	 	<liferay-ui:search-container-column-text name="Name" property="name" />
+	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
+	 	<liferay-ui:search-container-column-text name="Email" property="email" />
+		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="right" />
+	 </liferay-ui:search-container-row>
+	 
+	 <liferay-ui:search-iterator />
+	 
+	 </liferay-ui:search-container>
+	 
+	<!-- list workers grid -->
+ 	
+ 	</aui:column>
+ 	
+ 	</aui:layout>	
+   
 
    <aui:button type="submit" />
 </aui:form>

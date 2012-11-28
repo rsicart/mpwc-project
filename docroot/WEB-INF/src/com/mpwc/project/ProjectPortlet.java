@@ -41,6 +41,7 @@ package com.mpwc.project;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -57,7 +58,9 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.mpwc.model.Project;
+import com.mpwc.model.Worker;
 import com.mpwc.service.ProjectLocalServiceUtil;
+import com.mpwc.service.WorkerLocalServiceUtil;
 
 /**
  * Portlet implementation class ProjectPortlet
@@ -314,4 +317,26 @@ public class ProjectPortlet extends MVCPortlet {
 		 }
     }
 	
+    public void addProjectWorker(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
+    	try{
+    		//get params
+    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+        	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
+        	
+        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId);
+        	//add worker to project
+        	//Worker w = WorkerLocalServiceUtil.getWorker(workerId);
+        	int res = ProjectLocalServiceUtil.addProjectWorker(projectId, workerId);
+        	
+        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId+" - result:"+res);
+        	
+    	} catch (SystemException e1){
+    		System.out.println("addProjectWorker exception1:"+e1.getMessage());
+    		e1.printStackTrace();
+    	} catch (Exception e2){
+    		System.out.println("addProjectWorker exception2:"+e2.getMessage()+e2.getLocalizedMessage());
+    		e2.printStackTrace();
+    	}
+
+    }
 }
