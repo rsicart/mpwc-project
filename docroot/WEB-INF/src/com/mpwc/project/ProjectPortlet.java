@@ -323,12 +323,19 @@ public class ProjectPortlet extends MVCPortlet {
     		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
         	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
         	
-        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId);
-        	//add worker to project
-        	//Worker w = WorkerLocalServiceUtil.getWorker(workerId);
-        	int res = ProjectLocalServiceUtil.addProjectWorker(projectId, workerId);
+        	boolean doIt = ProjectLocalServiceUtil.containsWorker(projectId, workerId);
         	
-        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId+" - result:"+res);
+        	if(!doIt){
+	        	//add worker to project
+	        	int res = ProjectLocalServiceUtil.addProjectWorker(projectId, workerId);
+	        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId+" - result:"+res);
+        	} else {
+        		System.out.println("addProjectWorker worker "+workerId+" exists in project "+projectId);
+        	}
+        	
+        	//go to edit page
+        	actionResponse.setRenderParameter("projectId", String.valueOf(projectId));
+        	actionResponse.setRenderParameter("jspPage", "/jsp/edit.jsp");
         	
     	} catch (SystemException e1){
     		System.out.println("addProjectWorker exception1:"+e1.getMessage());
