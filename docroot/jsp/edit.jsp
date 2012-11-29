@@ -208,9 +208,8 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	 <liferay-ui:search-container-row className="com.mpwc.model.Worker" keyProperty="workerId" modelVar="worker">
 	 	<liferay-ui:search-container-column-text name="Name" property="name" />
 	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
-	 	<liferay-ui:search-container-column-text name="Nif" property="nif" />
 	 	<liferay-ui:search-container-column-text name="Email" property="email" />
-
+		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="right" />
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />

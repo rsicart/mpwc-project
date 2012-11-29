@@ -53,14 +53,16 @@ String primKeyPortlet = "projectportlet"; //portlet name
 
 //portlet actions available (see resource-actions/default.xml)
 String permAddWorker = "ADD_WORKER_PROJECT";
+String permDelWorker = "DELETE_WORKER_PROJECT";
 
 String projectId = renderRequest.getParameter("projectId");
 
 System.out.println("list_actions_edit.jsp:"+projectId);
 %>
 
-<liferay-ui:icon-menu>
+<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_WORKER_PROJECT") %>'>
 
+<liferay-ui:icon-menu>
 
 	<portlet:actionURL var="addProjectWorkerURL" name="addProjectWorker">
 		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
@@ -68,7 +70,15 @@ System.out.println("list_actions_edit.jsp:"+projectId);
 		<portlet:param name="workerId" value="<%=primKey %>" />
 	</portlet:actionURL>
 	
+	<portlet:actionURL var="delProjectWorkerURL" name="delProjectWorker">
+		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
+		<portlet:param name="projectId" value="<%=projectId %>" />
+		<portlet:param name="workerId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
 	<liferay-ui:icon image="add" message="Add" url="<%= addProjectWorkerURL.toString() %>" />
-
+	<liferay-ui:icon-delete url="<%= delProjectWorkerURL.toString() %>" />
 
 </liferay-ui:icon-menu>
+
+</c:if>
