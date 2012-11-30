@@ -361,17 +361,17 @@ public class ProjectPortlet extends MVCPortlet {
         	
         	boolean doIt = ProjectLocalServiceUtil.containsWorker(projectId, workerId);
         	
-        	if(doIt){
-	        	//delete worker from project
-        		//Bug LPS-29668 in liferay portal, dont uncomment until 6.2 (or 6.1.1 GA2 patched)
-	        	//ProjectLocalServiceUtil.removeWorker(projectId, workerId);
+        	//if(doIt){
+	        	////delete worker from project
+        		////Bug LPS-29668 in liferay portal, dont uncomment until 6.2 (or 6.1.1 GA2 patched)
+	        	////ProjectLocalServiceUtil.removeWorker(projectId, workerId);
         		int res = ProjectLocalServiceUtil.delProjectWorker(projectId, workerId);
 	        	System.out.println("delProjectWorker deleted worker "+workerId+" from project "+projectId+" - result:"+res);
-	        	SessionMessages.add(actionRequest, "project-worker-deleted");
-        	} else {
-        		System.out.println("delProjectWorker worker "+workerId+" doesn't exists in project "+projectId);
-        		SessionErrors.add(actionRequest, "error-doesntexist-project-worker");
-        	}
+	        //	SessionMessages.add(actionRequest, "project-worker-deleted");
+        	//} else {
+        	//	System.out.println("delProjectWorker worker "+workerId+" doesn't exists in project "+projectId);
+        	//	SessionErrors.add(actionRequest, "error-doesntexist-project-worker");
+        	//}
         	
         	//go to edit page
         	actionResponse.setRenderParameter("projectId", String.valueOf(projectId));
@@ -382,6 +382,29 @@ public class ProjectPortlet extends MVCPortlet {
     		e1.printStackTrace();
     	} catch (Exception e2){
     		System.out.println("delProjectWorker exception2:"+e2.getMessage()+e2.getLocalizedMessage());
+    		e2.printStackTrace();
+    	}
+
+    }
+    
+    
+    public void deleteProject(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
+    	try{
+    		//get params
+    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+        	
+        	System.out.println("deleteProject project "+projectId);
+        	
+        	ProjectLocalServiceUtil.deleteProject(projectId);
+        	
+        	//go to view page
+        	actionResponse.setRenderParameter("jspPage", "/jsp/view.jsp");
+        	
+    	} catch (SystemException e1){
+    		System.out.println("deleteProject exception1:"+e1.getMessage());
+    		e1.printStackTrace();
+    	} catch (Exception e2){
+    		System.out.println("deleteProject exception2:"+e2.getMessage()+e2.getLocalizedMessage());
     		e2.printStackTrace();
     	}
 

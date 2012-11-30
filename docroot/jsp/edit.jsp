@@ -183,7 +183,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
    
 	<aui:layout>
 	
-	<aui:column columnWidth="45" first="true">
+	<aui:column  first="true">
 	
 	<h2><%= res.getString("jspedit.project.workerlist") %></h2>
 	<!-- project workers grid -->
@@ -193,7 +193,8 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	<liferay-ui:search-container-results>
 	<% 
 	try{
-		List<Worker> tempResults = ProjectLocalServiceUtil.getWorkers(p.getProjectId());
+		//List<Worker> tempResults = ProjectLocalServiceUtil.getWorkers(p.getProjectId());
+		List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
 		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = tempResults.size();
 		pageContext.setAttribute("results", results);
@@ -209,7 +210,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	 	<liferay-ui:search-container-column-text name="Name" property="name" />
 	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
 	 	<liferay-ui:search-container-column-text name="Email" property="email" />
-		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="right" />
+		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="left" />
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />
@@ -220,7 +221,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
  	
  	</aui:column>		
  	
- 	<aui:column columnWidth="45" last="true">
+ 	<aui:column columnWidth="50" last="true">
  	
  	<!--list workers grid -->
  	
@@ -247,7 +248,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	 	<liferay-ui:search-container-column-text name="Name" property="name" />
 	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
 	 	<liferay-ui:search-container-column-text name="Email" property="email" />
-		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="right" />
+		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="left" />
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />
