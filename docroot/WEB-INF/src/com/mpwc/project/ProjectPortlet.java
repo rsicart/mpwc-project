@@ -121,11 +121,7 @@ public class ProjectPortlet extends MVCPortlet {
 	     			descShort != null && !descShort.isEmpty() &&
 	     			descFull != null && !descFull.isEmpty() &&
 	     			!Double.isNaN(cost) &&
-	     			time > 0
-	     			//canSetTime &&
-	     			//startDate != null && !startDate.isEmpty() &&
-	     			//endDate != null && !endDate.isEmpty() &&
-	     			//comments != null && !comments.isEmpty()
+	     			time >= 0
 	     		){
 	     		
 	 	    	Project p;
@@ -161,8 +157,7 @@ public class ProjectPortlet extends MVCPortlet {
  		    			int eDay = ParamUtil.getInteger(actionRequest,"endDateDay");
  		    			Date ed = PortalUtil.getDate(eMonth, eDay, eYear);
  		    			p.setEndDate(ed);
- 		    		}
-						
+ 		    		}						
 	 		    	
 	 		        if( comments != null && !comments.isEmpty() ){ p.setComments(comments); }
 	 		    	p.setCreateDate(now);
@@ -175,10 +170,8 @@ public class ProjectPortlet extends MVCPortlet {
 	 		    	
 	 		    	System.out.println("addProject -" + "groupId:" + p.getGroupId() + "companyId:" + p.getCompanyId());
 	 		    	
-	 			} catch (SystemException e) {
+	 			} catch (Exception e) {
 	 				System.out.println("addProject exception:" + e.getMessage());
-	 			} catch (PortalException e1) {
-	 				System.out.println("addProject exception:" + e1.getMessage());
 				}
 
 	     	}
@@ -220,7 +213,7 @@ public class ProjectPortlet extends MVCPortlet {
 	     			descShort != null && !descShort.isEmpty() &&
 	     			descFull != null && !descFull.isEmpty() &&
 	     			!Double.isNaN(cost) &&
-	     			time > 0
+	     			projectId > 0
 	     		){
 	     		
 	 	    	Project p;
@@ -262,9 +255,7 @@ public class ProjectPortlet extends MVCPortlet {
 	 		    	
 	 		    	System.out.println("editProject -" + "groupId:" + p.getGroupId() + "companyId:" + p.getCompanyId());
 	 		    	
-	 			} catch (SystemException e) {
-	 				System.out.println("editProject exception:" + e.getMessage());
-	 			} catch (PortalException e) {
+	 			} catch (Exception e) {
 	 				System.out.println("editProject exception:" + e.getMessage());
 				}
 
@@ -325,13 +316,11 @@ public class ProjectPortlet extends MVCPortlet {
     		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
         	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
         	
-        	boolean doIt = ProjectLocalServiceUtil.containsWorker(projectId, workerId);
-        	
-        	if(!doIt){
+        	if(projectId > 0 && workerId > 0){
 	        	//add worker to project
         		//Bug LPS-29668 in liferay portal, dont uncomment until 6.2 (or 6.1.1 GA2 patched)
-        		//ProjectLocalServiceUtil.addWorker(projectId, workerId);
-	        	int res = ProjectLocalServiceUtil.addProjectWorker(projectId, workerId);
+        		long res = ProjectLocalServiceUtil.addWorker(projectId, workerId);
+	        	//int res = ProjectLocalServiceUtil.addProjectWorker(projectId, workerId);
 	        	System.out.println("addProjectWorker added worker "+workerId+" to project "+projectId+" - result:"+res);
         	} else {
         		System.out.println("addProjectWorker worker "+workerId+" exists in project "+projectId);
@@ -341,12 +330,8 @@ public class ProjectPortlet extends MVCPortlet {
         	actionResponse.setRenderParameter("projectId", String.valueOf(projectId));
         	actionResponse.setRenderParameter("jspPage", "/jsp/edit.jsp");
         	
-    	} catch (SystemException e1){
-    		System.out.println("addProjectWorker exception1:"+e1.getMessage());
-    		//e1.printStackTrace();
-    	} catch (Exception e2){
-    		System.out.println("addProjectWorker exception2:"+e2.getMessage()+e2.getLocalizedMessage());
-    		//e2.printStackTrace();
+    	} catch (Exception e){
+    		System.out.println("addProjectWorker exception2:"+e.getMessage());
     	}
 
     }
@@ -357,32 +342,20 @@ public class ProjectPortlet extends MVCPortlet {
     		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
         	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
         	
-        	System.out.println("delProjectWorker deleting worker "+workerId+" from project "+projectId);
-        	
-        	boolean doIt = ProjectLocalServiceUtil.containsWorker(projectId, workerId);
-        	
-        	//if(doIt){
+        	if(projectId > 0 && workerId > 0){
 	        	////delete worker from project
-        		////Bug LPS-29668 in liferay portal, dont uncomment until 6.2 (or 6.1.1 GA2 patched)
+	    		////Bug LPS-29668 in liferay portal, dont uncomment until 6.2 (or 6.1.1 GA2 patched)
 	        	////ProjectLocalServiceUtil.removeWorker(projectId, workerId);
-        		int res = ProjectLocalServiceUtil.delProjectWorker(projectId, workerId);
+        		long res =ProjectLocalServiceUtil.removeWorker(projectId, workerId);
+	    		//int res = ProjectLocalServiceUtil.delProjectWorker(projectId, workerId);
 	        	System.out.println("delProjectWorker deleted worker "+workerId+" from project "+projectId+" - result:"+res);
-	        //	SessionMessages.add(actionRequest, "project-worker-deleted");
-        	//} else {
-        	//	System.out.println("delProjectWorker worker "+workerId+" doesn't exists in project "+projectId);
-        	//	SessionErrors.add(actionRequest, "error-doesntexist-project-worker");
-        	//}
-        	
+        	}
         	//go to edit page
         	actionResponse.setRenderParameter("projectId", String.valueOf(projectId));
         	actionResponse.setRenderParameter("jspPage", "/jsp/edit.jsp");
-        	
-    	} catch (SystemException e1){
-    		System.out.println("delProjectWorker exception1:"+e1.getMessage());
-    		e1.printStackTrace();
-    	} catch (Exception e2){
-    		System.out.println("delProjectWorker exception2:"+e2.getMessage()+e2.getLocalizedMessage());
-    		e2.printStackTrace();
+    	}	
+    	catch (Exception e){
+    		System.out.println("delProjectWorker exception2:"+e.getMessage());
     	}
 
     }
@@ -393,19 +366,16 @@ public class ProjectPortlet extends MVCPortlet {
     		//get params
     		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
         	
-        	System.out.println("deleteProject project "+projectId);
-        	
-        	ProjectLocalServiceUtil.deleteProject(projectId);
+        	if(projectId > 0){
+	        	ProjectLocalServiceUtil.deleteProject(projectId);
+	        	System.out.println("deleteProject project "+projectId);
+        	}
         	
         	//go to view page
         	actionResponse.setRenderParameter("jspPage", "/jsp/view.jsp");
         	
-    	} catch (SystemException e1){
-    		System.out.println("deleteProject exception1:"+e1.getMessage());
-    		e1.printStackTrace();
-    	} catch (Exception e2){
-    		System.out.println("deleteProject exception2:"+e2.getMessage()+e2.getLocalizedMessage());
-    		e2.printStackTrace();
+    	} catch (Exception e){
+    		System.out.println("deleteProject exception2:"+e.getMessage());
     	}
 
     }
