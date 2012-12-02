@@ -193,8 +193,8 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	<liferay-ui:search-container-results>
 	<% 
 	try{
-		//List<Worker> tempResults = ProjectLocalServiceUtil.getWorkers(p.getProjectId());
-		List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
+		List<Worker> tempResults = ProjectLocalServiceUtil.getWorkers(p.getProjectId());
+		//List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
 		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = tempResults.size();
 		pageContext.setAttribute("results", results);
