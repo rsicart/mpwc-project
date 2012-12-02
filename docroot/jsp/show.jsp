@@ -124,7 +124,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 		}
 		%>
 		<h3><%= res.getString("formlabel.projectmanager") %></h3>
-		<p><strong><%= pmName %></strong><%= ProjectLocalServiceUtil.totalizeTimeBoxs(p.getProjectId()) %></p>
+		<p><strong><%= pmName %></strong></p>
 			
 		    
 	</aui:column>
