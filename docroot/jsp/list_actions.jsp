@@ -50,6 +50,13 @@ String primKey = String.valueOf(p.getPrimaryKey());
 
 <liferay-ui:icon-menu>
 
+	<portlet:renderURL var="showURL">
+		<portlet:param name="jspPage" value="/jsp/show.jsp" />
+		<portlet:param name="projectId" value="<%=primKey %>" />
+	</portlet:renderURL>
+	
+	<liferay-ui:icon image="edit" message="Show" url="<%= showURL.toString() %>" />
+
 <c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE) %>">
 	<portlet:renderURL var="editURL">
 		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
