@@ -356,6 +356,7 @@ public class ProjectPortlet extends MVCPortlet {
     	}	
     	catch (Exception e){
     		System.out.println("delProjectWorker exception2:"+e.getMessage());
+    		e.printStackTrace();
     	}
 
     }
@@ -373,6 +374,30 @@ public class ProjectPortlet extends MVCPortlet {
         	
         	//go to view page
         	actionResponse.setRenderParameter("jspPage", "/jsp/view.jsp");
+        	
+    	} catch (Exception e){
+    		System.out.println("deleteProject exception2:"+e.getMessage());
+    	}
+
+    }
+    
+    //setProjectManager
+    public void setProjectManager(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
+    	try{
+    		//get params
+    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+    		long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
+        	
+        	if(projectId > 0 && workerId > 0){
+	        	Project p = ProjectLocalServiceUtil.getProject(projectId);
+	        	p.setWorkerId(workerId);
+	        	System.out.println("setProjectManager project "+projectId);
+	        	ProjectLocalServiceUtil.updateProject(p);
+        	}
+        	
+        	//go to edit page
+        	actionResponse.setRenderParameter("projectId", String.valueOf(projectId));
+        	actionResponse.setRenderParameter("jspPage", "/jsp/edit.jsp");
         	
     	} catch (Exception e){
     		System.out.println("deleteProject exception2:"+e.getMessage());

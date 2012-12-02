@@ -64,13 +64,20 @@ System.out.println("list_actions_edit.jsp:"+projectId);
 
 <liferay-ui:icon-menu>
 
-	<portlet:actionURL var="addProjectWorkerURL" name="addProjectWorker">
+	<portlet:actionURL var="setProjectManagerURL" name="setProjectManager">
 		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
 		<portlet:param name="projectId" value="<%=projectId %>" />
 		<portlet:param name="workerId" value="<%=primKey %>" />
 	</portlet:actionURL>
 	
-	<liferay-ui:icon image="add" message="Add" url="<%= addProjectWorkerURL.toString() %>" />
+	<portlet:actionURL var="delProjectWorkerURL" name="delProjectWorker">
+		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
+		<portlet:param name="projectId" value="<%=projectId %>" />
+		<portlet:param name="workerId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
+	<liferay-ui:icon image="add" message="Set as PM" url="<%= setProjectManagerURL.toString() %>" />
+	<liferay-ui:icon-delete url="<%= delProjectWorkerURL.toString() %>" />
 
 </liferay-ui:icon-menu>
 

@@ -174,6 +174,21 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 				</aui:option>
 			</aui:select>
 			
+			<% 
+			String pmName = res.getString("formlabel.noprojectmanager");
+			try{
+				if(p.getWorkerId()>0){
+					Worker w = WorkerLocalServiceUtil.getWorker(p.getWorkerId());
+					pmName = w.getSurname()+", "+w.getName();
+				}
+
+			} catch(Exception e){
+				System.out.println("edit.jsp: can't read project manager");
+			}
+			%>
+			<h3><%= res.getString("formlabel.projectmanager") %></h3>
+			<p><strong><%= pmName %></strong></p>
+			
 		</aui:fieldset>
 		    
 	</aui:column>
@@ -210,7 +225,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	 	<liferay-ui:search-container-column-text name="Name" property="name" />
 	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
 	 	<liferay-ui:search-container-column-text name="Email" property="email" />
-		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit.jsp" align="left" />
+		<liferay-ui:search-container-column-jsp path="/jsp/list_actions_edit_team.jsp" align="left" />
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />
