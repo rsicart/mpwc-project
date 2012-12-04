@@ -46,6 +46,8 @@ Project p = (Project) row.getObject();
 long groupId = themeDisplay.getLayout().getGroupId();
 String name = Project.class.getName();
 String primKey = String.valueOf(p.getPrimaryKey());
+
+System.out.println("Permiso addTimebox:"+PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_TIMEBOX")+" - MpwcUser? "+request.isUserInRole("MpwcUser")+ " - portletId: "+portletDisplay.getId());
 %>
 
 <liferay-ui:icon-menu>
@@ -73,6 +75,15 @@ String primKey = String.valueOf(p.getPrimaryKey());
 	</portlet:actionURL>
 	
 	<liferay-ui:icon-delete url="<%= deleteURL.toString() %>" />
+</c:if>
+
+<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_TIMEBOX") %>'>
+	<portlet:actionURL var="addTimeBoxURL" name="preAddTimeBox">
+		<portlet:param name="jspPage" value="/jsp/add_timebox.jsp" />
+		<portlet:param name="projectId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
+	<liferay-ui:icon image="add" message="Add time" url="<%= addTimeBoxURL.toString() %>" />
 </c:if>
 
 </liferay-ui:icon-menu>

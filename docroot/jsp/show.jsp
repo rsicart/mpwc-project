@@ -75,25 +75,25 @@ String permAddWorker = "ADD_WORKER_PROJECT";
  	
 
 
-		<p><%= res.getString("formlabel.projectname") %></p><p><%= p.getName() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projectname") %></p><p class="cooler-field"><%= p.getName() %></p>
 
-		<p><%= res.getString("formlabel.projectdescshort") %></p><p><%= p.getDescShort() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projectdescshort") %></p><p class="cooler-field"><%= p.getDescShort() %></p>
 		
-   		<p><%= res.getString("formlabel.projectdescfull") %></p><p><%= p.getDescFull() %></p>
+   		<p class="cooler-label"><%= res.getString("formlabel.projectdescfull") %></p><p class="cooler-field"><%= p.getDescFull() %></p>
 
-		<p><%= res.getString("formlabel.startdate") %></p><p><%= p.getStartDate() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.startdate") %></p><p class="cooler-field"><%= p.getStartDate() %></p>
 		
-		<p><%= res.getString("formlabel.enddate") %></p><p><%= p.getEndDate() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.enddate") %></p><p class="cooler-field"><%= p.getEndDate() %></p>
 		
-		<p><%= res.getString("formlabel.comments") %></p><p><%= p.getComments() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.comments") %></p><p class="cooler-field"><%= p.getComments() %></p>
 		
-		<p><%= res.getString("formlabel.totaltimebox") %></p><p><%= ProjectLocalServiceUtil.totalizeTimeBoxs(p.getProjectId()) %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.totaltimebox") %></p><p class="cooler-field"><%= ProjectLocalServiceUtil.totalizeTimeBoxs(p.getProjectId()) %></p>
 
 	</aui:column>
 	
 	<aui:column columnWidth="50" last="true">
 	
-		<p><%= res.getString("formlabel.projecttype") %></p><p><%=p.getType() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projecttype") %></p><p class="cooler-field"><%=p.getType() %></p>
 		
 		<% 
 		ProjectStatus ps = ProjectStatusLocalServiceUtil.getProjectStatus(p.getProjectStatusId());
@@ -103,13 +103,13 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 		else if(locale.equals("ca-ES")){ descStatus = ps.getDesc_ca_ES(); }
 		else { descStatus = ps.getDesc_en_US(); }
 		%>
-		<p><%= res.getString("formlabel.status") %></p><p><%= descStatus %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.status") %></p><p class="cooler-field"><%= descStatus %></p>
 		
-		<p><%= res.getString("formlabel.projectcostestimated") %></p><p><%= p.getCostEstimatedEuros() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projectcostestimated") %></p><p class="cooler-field"><%= p.getCostEstimatedEuros() %></p>
 		
-		<p><%= res.getString("formlabel.projecttimeestimated") %></p><p><%= p.getTimeEstimatedHours() %></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projecttimeestimated") %></p><p class="cooler-field"><%= p.getTimeEstimatedHours() %></p>
 		
-	    <p><%= res.getString("formlabel.projectcansethours") %></p><p><%=p.getCanSetWorkerHours() %></p>
+	    <p class="cooler-label"><%= res.getString("formlabel.projectcansethours") %></p><p class="cooler-field"><%=p.getCanSetWorkerHours() %></p>
 		
 		<% 
 		String pmName = res.getString("formlabel.noprojectmanager");
@@ -123,8 +123,8 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 			System.out.println("edit.jsp: can't read project manager");
 		}
 		%>
-		<h3><%= res.getString("formlabel.projectmanager") %></h3>
-		<p><strong><%= pmName %></strong></p>
+		<p class="cooler-label"><%= res.getString("formlabel.projectmanager") %></p>
+		<p class="cooler-field"><strong><%= pmName %></strong></p>
 			
 		    
 	</aui:column>

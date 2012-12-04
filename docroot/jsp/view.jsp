@@ -49,7 +49,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
  ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale(language, country));
  
+ //get user data
  long groupId = themeDisplay.getLayout().getGroupId();
+ long userId = themeDisplay.getUserId();
+ Worker myWorker = WorkerLocalServiceUtil.findByG_U_First(groupId, userId, null);
+ 
  //portlet permissions
  String namePortlet = portletDisplay.getId(); //default value
  String primKeyPortlet = "projectportlet"; //portlet name
@@ -59,6 +63,7 @@ POSSIBILITY OF SUCH DAMAGE.
  String permUpdateProject = "UPDATE_PROJECT";
  String permDeleteProject = "DELETE_PROJECT";
  
+ //bean initialization
  Project ftrProject = ProjectLocalServiceUtil.createProject(0);
  
  //get search filters if necessary
@@ -127,6 +132,10 @@ POSSIBILITY OF SUCH DAMAGE.
  
  String error2 = "";
  try{
+	 
+	 //show filters to search projects
+	 if(request.isUserInRole("administrator")){
+
 	 %>
 	<portlet:actionURL var="filterURL" name="getProjectsByFilters">
 	   <portlet:param name="mvcPath" value="/jsp/view.jsp" />
@@ -274,7 +283,9 @@ POSSIBILITY OF SUCH DAMAGE.
 			
 	</aui:layout>
 
-	
+	<% 
+	 }
+	%>
 
 	<aui:layout>
 	
@@ -282,11 +293,18 @@ POSSIBILITY OF SUCH DAMAGE.
 	
 	<!-- grid -->
 	 
-	<liferay-ui:search-container delta="5">
+	<liferay-ui:search-container delta="5" emptyResultsMessage="jspview.message.noprojects">
 	
 	<liferay-ui:search-container-results>
-	<%  
-		List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByFilters(ftrStatus, ftrName, ftrType, ftrDescShort, startDate.getTime(), endDate.getTime(), ftrCostEstimatedEuros, ftrTimeEstimatedHours, ftrCanSetWorkerHours, ftrComments);
+	<%
+	List<Project> tempResults = null;
+	if(request.isUserInRole("administrator")){
+		//show all results with filters
+		tempResults = ProjectLocalServiceUtil.getProjectsByFilters(ftrStatus, ftrName, ftrType, ftrDescShort, startDate.getTime(), endDate.getTime(), ftrCostEstimatedEuros, ftrTimeEstimatedHours, ftrCanSetWorkerHours, ftrComments);
+	} else {
+		//show only my projects
+		tempResults = WorkerLocalServiceUtil.getProjects(myWorker.getWorkerId());
+	}
 		//List<Project> tempResults = ProjectLocalServiceUtil.getProjectsByStatusDesc(ftrStatus);
 		results = ListUtil.subList(tempResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = tempResults.size();

@@ -59,9 +59,12 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.mpwc.NoSuchWorkerException;
 import com.mpwc.model.Project;
+import com.mpwc.model.TimeBox;
 import com.mpwc.model.Worker;
 import com.mpwc.service.ProjectLocalServiceUtil;
+import com.mpwc.service.TimeBoxLocalServiceUtil;
 import com.mpwc.service.WorkerLocalServiceUtil;
 
 /**
@@ -404,4 +407,81 @@ public class ProjectPortlet extends MVCPortlet {
     	}
 
     }
+    
+	public void preAddTimeBox(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException{
+		String projectId = ParamUtil.getString(actionRequest, "projectId");
+		//create an empty project
+		TimeBox timeBox = TimeBoxLocalServiceUtil.createTimeBox(0);
+		//pass it to the view (useBean to catch it)
+		actionRequest.setAttribute("timeBox", timeBox);
+		actionResponse.setRenderParameter("projectId", projectId);
+		actionResponse.setRenderParameter("jspPage", "/jsp/add_timebox.jsp");
+	}
+	
+	
+	public void addTimeBox(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException{
+	     	
+    	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    	
+    	long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+    	long minutes = Long.parseLong(actionRequest.getParameter("minutes"));
+     	String comments = actionRequest.getParameter("comments");
+     	
+		int dYear = ParamUtil.getInteger(actionRequest,"dedicationDateYear");
+		int dMonth = ParamUtil.getInteger(actionRequest,"dedicationDateMonth");
+		int dDay = ParamUtil.getInteger(actionRequest,"dedicationDateDay");
+		Date dd = PortalUtil.getDate(dMonth, dDay, dYear);
+     	
+     	//get user data
+     	long userId = themeDisplay.getUserId();
+     	long groupId = themeDisplay.getLayout().getGroupId();
+     	Worker worker;
+     	long workerId = 0;
+		try {
+			worker = WorkerLocalServiceUtil.findByG_U_First(groupId, userId, null);
+			workerId = worker.getWorkerId();
+		} catch (NoSuchWorkerException e1) {
+			System.out.println("addTimeBox exception: no existe el trabajador.");
+		} catch (SystemException e1) {
+			System.out.println("addTimeBox exception");
+		}
+     	
+     	System.out.println("addTimeBox adding:" +" - "+ projectId +" - "+ workerId +" - "+ minutes +" - "+ dd.getTime() + " - "+comments );
+     	
+     	Date now = new Date();
+     	
+     	if(	projectId > 0 && workerId > 0 && minutes > 0 && dd != null ){
+     		
+ 	    	TimeBox tb;
+ 			try {
+ 				//long timeBoxId = CounterLocalServiceUtil.increment(TimeBox.class.getName());
+ 				long timeBoxId = 0; //id is added inside add method
+ 				tb = TimeBoxLocalServiceUtil.createTimeBox(timeBoxId);
+ 				
+ 				tb.setProjectId(projectId);
+ 				tb.setWorkerId(workerId);
+ 				tb.setMinutes(minutes);
+	    		tb.setDedicationDate(dd);					
+ 		    	
+ 		        if( comments != null && comments.length() > 0 ){ tb.setComments(comments); }
+ 		    	
+ 		        tb.setCreateDate(now); 		    	
+ 				tb.setCompanyId(themeDisplay.getCompanyId());
+ 				tb.setGroupId(themeDisplay.getScopeGroupId());
+ 		    	
+ 				TimeBoxLocalServiceUtil.add(tb);
+ 		    	
+ 		    	System.out.println("addTimeBox -" + "groupId:" + tb.getGroupId() + "companyId:" + tb.getCompanyId()+ " - comments:"+tb.getComments());
+ 		    	
+ 			} catch (Exception e) {
+ 				System.out.println("addTimeBox exception:" + e.getMessage());
+			}
+
+     	}
+
+     	// gracefully redirecting to the default portlet view
+     	String redirectURL = actionRequest.getParameter("redirectURL");
+     	actionResponse.sendRedirect(redirectURL);      	
+	}
+	
 }
