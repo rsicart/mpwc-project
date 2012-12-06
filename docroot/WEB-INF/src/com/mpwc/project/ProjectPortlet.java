@@ -481,7 +481,7 @@ public class ProjectPortlet extends MVCPortlet {
 
      	// gracefully redirecting to the default portlet view
      	String redirectURL = actionRequest.getParameter("redirectURL");
-     	actionResponse.sendRedirect(redirectURL);      	
+     	actionResponse.sendRedirect(redirectURL);
 	}
 	
 }

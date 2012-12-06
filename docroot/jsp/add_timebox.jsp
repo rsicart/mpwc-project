@@ -59,6 +59,8 @@ long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
     <portlet:param name="jspPage" value="/jsp/view.jsp" />
 </portlet:actionURL>
 
+<% System.out.println("redirecURL:"+renderResponse.createRenderURL().toString()); %>
+
 <aui:form name="frm_add_timebox" action="<%= addTimeBoxURL %>" method="post">
 	
 	<aui:input type="hidden" name="redirectURL" value="<%= renderResponse.createRenderURL().toString() %>"/>

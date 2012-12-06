@@ -86,4 +86,13 @@ System.out.println("Permiso addTimebox:"+PortletPermissionUtil.contains(permissi
 	<liferay-ui:icon image="add" message="Add time" url="<%= addTimeBoxURL.toString() %>" />
 </c:if>
 
+<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "VIEW_TIMEBOX") %>'>
+	<portlet:renderURL var="showTimeBoxURL">
+		<portlet:param name="jspPage" value="/jsp/show_timebox.jsp" />
+		<portlet:param name="projectId" value="<%=primKey %>" />
+	</portlet:renderURL>
+	
+	<liferay-ui:icon image="view" message="Show time" url="<%= showTimeBoxURL.toString() %>" />
+</c:if>
+
 </liferay-ui:icon-menu>

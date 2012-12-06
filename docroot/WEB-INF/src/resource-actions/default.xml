@@ -11,6 +11,7 @@
 				<action-key>DELETE_PROJECT</action-key>
 				<action-key>ADD_WORKER_PROJECT</action-key>
 				<action-key>DELETE_WORKER_PROJECT</action-key>
+				<action-key>VIEW_TIMEBOX</action-key>
 				<action-key>ADD_TIMEBOX</action-key>
 				<action-key>DELETE_TIMEBOX</action-key>
 				<action-key>UPDATE_TIMEBOX</action-key>
@@ -30,6 +31,7 @@
 				<action-key>DELETE_PROJECT</action-key>
 				<action-key>ADD_WORKER_PROJECT</action-key>
 				<action-key>DELETE_WORKER_PROJECT</action-key>
+				<action-key>VIEW_TIMEBOX</action-key>
 				<action-key>ADD_TIMEBOX</action-key>
 				<action-key>DELETE_TIMEBOX</action-key>
 				<action-key>UPDATE_TIMEBOX</action-key>
