@@ -292,11 +292,17 @@ POSSIBILITY OF SUCH DAMAGE.
 	<aui:column columnWidth="90" first="true">
 	
 	<!-- grid -->
-	 
-	<liferay-ui:search-container delta="5" emptyResultsMessage="jspview.message.noprojects">
+	
+	<liferay-ui:search-container curParam="pr" delta="20" emptyResultsMessage="jspview.message.noprojects">
 	
 	<liferay-ui:search-container-results>
 	<%
+	
+	results = null;
+	total = -1;
+	pageContext.setAttribute("results", results);
+	pageContext.setAttribute("total",total);
+	
 	List<Project> tempResults = null;
 	if(request.isUserInRole("administrator")){
 		//show all results with filters

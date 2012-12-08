@@ -56,6 +56,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="com.liferay.portal.kernel.exception.SystemException" %>
 <%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %>
 <%@ page import="com.liferay.portal.kernel.dao.search.SearchEntry" %>
+<%@ page import="com.liferay.portal.kernel.dao.search.SearchContainer" %>
 <%@ page import="com.liferay.portal.service.permission.PortalPermissionUtil" %>
 <%@ page import="com.liferay.portal.service.permission.PortletPermissionUtil" %>
 <%@ page import="com.liferay.portal.service.UserLocalServiceUtil" %>

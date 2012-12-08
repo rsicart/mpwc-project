@@ -55,17 +55,21 @@ String primKeyPortlet = "projectportlet"; //portlet name
 //portlet actions available (see resource-actions/default.xml)
 String permAddWorker = "ADD_WORKER_PROJECT";
 
+//get project data
+long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
+Project p = ProjectLocalServiceUtil.getProject(projectId);
+
+//searchContainer iteratorURL
+PortletURL iteratorURL = renderResponse.createRenderURL();
+iteratorURL.setParameter("jspPage", "/jsp/edit.jsp");
+iteratorURL.setParameter("projectId", Long.toString(projectId));
+
 %>
 
 <h1><%= res.getString("jspedit.maintitle") %></h1>
 
 <%
-	long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
-
-	Project p = ProjectLocalServiceUtil.getProject(projectId);
-	
 	System.out.println("edit.jsp projectId"+projectId+" - p projectId"+p.getProjectId());
-
 %>
 
 <portlet:actionURL var="editProjectURL" name="editProject">
@@ -203,7 +207,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	<h2><%= res.getString("jspedit.project.workerlist") %></h2>
 	<!-- project workers grid -->
 	 
-	<liferay-ui:search-container delta="5" emptyResultsMessage="jspedit-message-noworkers">
+	<liferay-ui:search-container iteratorURL="<%= iteratorURL %>" curParam="projWrkCp" delta="5" emptyResultsMessage="jspedit-message-noworkers">
 	
 	<liferay-ui:search-container-results>
 	<% 
@@ -243,7 +247,7 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	<h2><%= res.getString("jspedit.project.fullworkerlist") %></h2>
 	<!-- grid -->
 	 
-	<liferay-ui:search-container delta="5" emptyResultsMessage="jspedit-message-noworkers">
+	<liferay-ui:search-container iteratorURL="<%= iteratorURL %>" delta="5" curParam="fullWrkCp" emptyResultsMessage="jspedit-message-noworkers">
 	
 	<liferay-ui:search-container-results>
 	<% 
