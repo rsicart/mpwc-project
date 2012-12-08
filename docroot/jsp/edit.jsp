@@ -66,7 +66,7 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
 
 %>
 
-<h1><%= res.getString("jspedit.maintitle") %></h1>
+<h1 class="cooler-label"><%= res.getString("jspedit.maintitle") %></h1>
 
 <%
 	System.out.println("edit.jsp projectId"+projectId+" - p projectId"+p.getProjectId());
@@ -204,7 +204,7 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
 	
 	<aui:column  first="true">
 	
-	<h2><%= res.getString("jspedit.project.workerlist") %></h2>
+	<h2 class="cooler-label"><%= res.getString("jspedit.project.workerlist") %></h2>
 	<!-- project workers grid -->
 	 
 	<liferay-ui:search-container iteratorURL="<%= iteratorURL %>" curParam="projWrkCp" delta="5" emptyResultsMessage="jspedit-message-noworkers">
@@ -244,7 +244,7 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
  	
  	<!--list workers grid -->
  	
-	<h2><%= res.getString("jspedit.project.fullworkerlist") %></h2>
+	<h2 class="cooler-label"><%= res.getString("jspedit.project.fullworkerlist") %></h2>
 	<!-- grid -->
 	 
 	<liferay-ui:search-container iteratorURL="<%= iteratorURL %>" delta="5" curParam="fullWrkCp" emptyResultsMessage="jspedit-message-noworkers">
