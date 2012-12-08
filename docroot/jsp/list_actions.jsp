@@ -57,7 +57,7 @@ System.out.println("Permiso addTimebox:"+PortletPermissionUtil.contains(permissi
 		<portlet:param name="projectId" value="<%=primKey %>" />
 	</portlet:renderURL>
 	
-	<liferay-ui:icon image="edit" message="Show" url="<%= showURL.toString() %>" />
+	<liferay-ui:icon image="edit" message="formlabel.actionshow" url="<%= showURL.toString() %>" />
 
 <c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE) %>">
 	<portlet:renderURL var="editURL">
@@ -65,7 +65,7 @@ System.out.println("Permiso addTimebox:"+PortletPermissionUtil.contains(permissi
 		<portlet:param name="projectId" value="<%=primKey %>" />
 	</portlet:renderURL>
 	
-	<liferay-ui:icon image="edit" message="Edit" url="<%= editURL.toString() %>" />
+	<liferay-ui:icon image="edit" message="formlabel.actionedit" url="<%= editURL.toString() %>" />
 </c:if>
 
 <c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE) %>">
@@ -74,25 +74,30 @@ System.out.println("Permiso addTimebox:"+PortletPermissionUtil.contains(permissi
 		<portlet:param name="redirectURL" value="<%= renderResponse.createRenderURL().toString() %>" />
 	</portlet:actionURL>
 	
-	<liferay-ui:icon-delete url="<%= deleteURL.toString() %>" />
+	<liferay-ui:icon-delete url="<%= deleteURL.toString() %>" message="formlabel.actiondelete" />
 </c:if>
 
-<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_TIMEBOX") %>'>
-	<portlet:actionURL var="addTimeBoxURL" name="preAddTimeBox">
-		<portlet:param name="jspPage" value="/jsp/add_timebox.jsp" />
-		<portlet:param name="projectId" value="<%=primKey %>" />
-	</portlet:actionURL>
+<% 
+//show only if workers can add timebox to project
+if(p.getCanSetWorkerHours() == true){
+%>
+	<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_TIMEBOX") %>'>
 	
-	<liferay-ui:icon image="add" message="Add time" url="<%= addTimeBoxURL.toString() %>" />
-</c:if>
-
-<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "VIEW_TIMEBOX") %>'>
-	<portlet:renderURL var="showTimeBoxURL">
-		<portlet:param name="jspPage" value="/jsp/show_timebox.jsp" />
-		<portlet:param name="projectId" value="<%=primKey %>" />
-	</portlet:renderURL>
+		<portlet:actionURL var="addTimeBoxURL" name="preAddTimeBox">
+			<portlet:param name="jspPage" value="/jsp/add_timebox.jsp" />
+			<portlet:param name="projectId" value="<%=primKey %>" />
+		</portlet:actionURL>
+		
+		<liferay-ui:icon image="add" message="formlabel.actionaddtimebox" url="<%= addTimeBoxURL.toString() %>" />	
+	</c:if>
 	
-	<liferay-ui:icon image="view" message="Show time" url="<%= showTimeBoxURL.toString() %>" />
-</c:if>
-
+	<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "VIEW_TIMEBOX") %>'>
+		<portlet:renderURL var="showTimeBoxURL">
+			<portlet:param name="jspPage" value="/jsp/show_timebox.jsp" />
+			<portlet:param name="projectId" value="<%=primKey %>" />
+		</portlet:renderURL>
+		
+		<liferay-ui:icon image="view" message="formlabel.actionshowtimebox" url="<%= showTimeBoxURL.toString() %>" />
+	</c:if>
+<% } %>
 </liferay-ui:icon-menu>

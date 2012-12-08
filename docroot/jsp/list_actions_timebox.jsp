@@ -42,43 +42,50 @@ POSSIBILITY OF SUCH DAMAGE.
 
 <%
 ResultRow row = (ResultRow) request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-Worker w = (Worker) row.getObject();
+TimeBox tb = (TimeBox) row.getObject();
 long groupId = themeDisplay.getLayout().getGroupId();
-String name = Worker.class.getName();
-String primKey = String.valueOf(w.getPrimaryKey());
+String name = TimeBox.class.getName();
+String primKey = String.valueOf(tb.getPrimaryKey());
 
 //portlet permissions
 String namePortlet = portletDisplay.getId(); //default value
 String primKeyPortlet = "projectportlet"; //portlet name
 
 //portlet actions available (see resource-actions/default.xml)
-String permAddWorker = "ADD_WORKER_PROJECT";
-String permDelWorker = "DELETE_WORKER_PROJECT";
+String permEditTimebox = "ADD_WORKER_PROJECT";
+String permDelTimebox = "DELETE_WORKER_PROJECT";
 
 String projectId = renderRequest.getParameter("projectId");
 
-System.out.println("list_actions_edit.jsp:"+projectId);
+System.out.println("list_actions_timebox.jsp:"+primKey);
+
+//define where actions in portlet have to go after
+PortletURL redirectURL = renderResponse.createRenderURL();
+redirectURL.setParameter("jspPage", "/jsp/show_timebox.jsp");
+redirectURL.setParameter("projectId", projectId);
 %>
 
-<c:if test='<%= PortletPermissionUtil.contains(permissionChecker, portletDisplay.getId(), "ADD_WORKER_PROJECT") %>'>
+
 
 <liferay-ui:icon-menu>
 
-	<portlet:actionURL var="setProjectManagerURL" name="setProjectManager">
-		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
-		<portlet:param name="projectId" value="<%=projectId %>" />
-		<portlet:param name="workerId" value="<%=primKey %>" />
-	</portlet:actionURL>
-	
-	<portlet:actionURL var="delProjectWorkerURL" name="delProjectWorker">
-		<portlet:param name="jspPage" value="/jsp/edit.jsp" />
-		<portlet:param name="projectId" value="<%=projectId %>" />
-		<portlet:param name="workerId" value="<%=primKey %>" />
-	</portlet:actionURL>
-	
-	<liferay-ui:icon image="add" message="formlabel.actionsetaspm" url="<%= setProjectManagerURL.toString() %>" />
-	<liferay-ui:icon-delete url="<%= delProjectWorkerURL.toString() %>" message="formlabel.actiondelete" />
+	<c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE) %>">
+		<portlet:renderURL var="editTimeBoxURL">
+			<portlet:param name="jspPage" value="/jsp/edit_timebox.jsp" />
+			<portlet:param name="projectId" value="<%=projectId %>" />
+			<portlet:param name="timeBoxId" value="<%= primKey %>" />
+			<portlet:param name="redirectURL" value="<%= redirectURL.toString() %>" />
+		</portlet:renderURL>
+		<liferay-ui:icon image="edit" message="formlabel.actionedit" url="<%= editTimeBoxURL.toString() %>" />
+	</c:if>
+		
+	<c:if test="<%= permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE) %>">
+		<portlet:actionURL name="deleteTimeBox" var="deleteURL">
+			<portlet:param name="projectId" value="<%=projectId %>" />
+			<portlet:param name="timeBoxId" value="<%=primKey %>" />
+			<portlet:param name="redirectURL" value="<%= redirectURL.toString() %>" />
+		</portlet:actionURL>		
+		<liferay-ui:icon-delete url="<%= deleteURL.toString() %>" message="formlabel.actiondelete"/>
+	</c:if>	
 
 </liferay-ui:icon-menu>
-
-</c:if>

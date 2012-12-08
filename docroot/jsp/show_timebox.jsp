@@ -84,105 +84,105 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
 
 	<aui:layout>
 
-	<aui:column columnWidth="50">
-	
 	<h2 class="cooler-label"><%= p.getName() %></h2>
-	
-	<!-- project timebox grid -->
-	 
-	<liferay-ui:search-container iteratorURL="<%= iteratorURL %>"  curParam="timeboxCurParam" delta="10" emptyResultsMessage="jspshowtimebox-message-notimebox">
-	
-	<liferay-ui:search-container-results>
-	<% 
-	results = null;
-	total = -1;
-	pageContext.setAttribute("results", results);
-	pageContext.setAttribute("total",total);
-	
-	try{
-		System.out.println("search1:"+ searchContainer.getCurParam()+" - "+searchContainer.getIteratorURL());
+
+	<aui:column columnWidth="75">	
 		
-		List<TimeBox> tbResults = TimeBoxLocalServiceUtil.findByProjectWorker(p.getProjectId(), me.getWorkerId());
-		//List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
-		results = ListUtil.subList(tbResults, searchContainer.getStart(),searchContainer.getEnd());
-		total = tbResults.size();
+		<!-- project timebox grid -->
+		 
+		<liferay-ui:search-container iteratorURL="<%= iteratorURL %>"  curParam="timeboxCurParam" delta="10" emptyResultsMessage="jspshowtimebox-message-notimebox">
+		
+		<liferay-ui:search-container-results>
+		<% 
+		results = null;
+		total = -1;
 		pageContext.setAttribute("results", results);
 		pageContext.setAttribute("total",total);
-		System.out.println("show_timebox.jsp total 1: "+total);
-	} catch(Exception e){
-		System.out.println("show_timebox.jsp exception 1: "+e.getMessage());
-	}
-	 %>	
-	 </liferay-ui:search-container-results>
-	 
-	 <liferay-ui:search-container-row className="com.mpwc.model.TimeBox" keyProperty="timeboxId" modelVar="timeBox">
-	 	<liferay-ui:search-container-column-text name="Date" property="dedicationDate" />
-	 	<liferay-ui:search-container-column-text name="Minutes" property="minutes" />
-	 	<liferay-ui:search-container-column-text name="Comments" property="comments" />
-	 </liferay-ui:search-container-row>
-	 
-	 <liferay-ui:search-iterator />
-	 
-	 </liferay-ui:search-container>
-	 
-	 <!-- end project timebox grid -->
+		
+		try{
+			System.out.println("search1:"+ searchContainer.getCurParam()+" - "+searchContainer.getIteratorURL());
+			
+			List<TimeBox> tbResults = TimeBoxLocalServiceUtil.findByProjectWorker(p.getProjectId(), me.getWorkerId());
+			//List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
+			results = ListUtil.subList(tbResults, searchContainer.getStart(),searchContainer.getEnd());
+			total = tbResults.size();
+			pageContext.setAttribute("results", results);
+			pageContext.setAttribute("total",total);
+			System.out.println("show_timebox.jsp total 1: "+total);
+		} catch(Exception e){
+			System.out.println("show_timebox.jsp exception 1: "+e.getMessage());
+		}
+		 %>	
+		 </liferay-ui:search-container-results>
+		 
+		 <liferay-ui:search-container-row className="com.mpwc.model.TimeBox" keyProperty="timeboxId" modelVar="timeBox">
+		 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.dedicationdate") %>' property="dedicationDate" />
+		 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.minutes") %>' property="minutes" />
+		 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.comments") %>' property="comments" />
+		 	<liferay-ui:search-container-column-jsp path="/jsp/list_actions_timebox.jsp" align="right" />
+		 </liferay-ui:search-container-row>
+		 
+		 <liferay-ui:search-iterator />
+		 
+		 </liferay-ui:search-container>
+		 
+		 <!-- end project timebox grid -->
 	
 	</aui:column>
 	
 	
 	<aui:column>
 	
-	<p class="cooler-label"><%= res.getString("formlabel.totaltimebox") %></p>
-	
+		<p class="cooler-label"><%= res.getString("formlabel.totaltimebox") %></p>
 		<%
 			long totalMin = TimeBoxLocalServiceUtil.totalizeTimeboxByProjectWorker(p.getProjectId(), me.getWorkerId());
 		%>
-	<p class="cooler-field"><%= totalMin %></p>
-	
-	
-	<p class="cooler-label"><b><%= res.getString("jspaddtimebox.maintitle") %></b></p>
-	
-	<% 
-		PortletURL rUrl = renderResponse.createRenderURL();
-		rUrl.setParameter("jspPage", "/jsp/show_timebox.jsp");
-		rUrl.setParameter("projectId", Long.toString(p.getProjectId()));
-		//System.out.println("redirecURL:"+rUrl); 
-	%>
-	<portlet:actionURL var="addTimeBoxURL" name="addTimeBox">
-		<portlet:param name="redirectURL" value="<%= rUrl.toString() %>" />
-	</portlet:actionURL>
-	
-	
-	
-	<aui:form name="frm_add_timebox" action="<%= addTimeBoxURL %>" method="post">
+		<p class="cooler-field"><%= totalMin %></p>
 		
-		<aui:input type="hidden" name="redirectURL" value="<%= rUrl.toString() %>"/>
-		<aui:input type="hidden" name="projectId" value="<%= projectId %>"/>
-	 	
-	 		<aui:fieldset>
-	
-				<aui:input label='<%= res.getString("formlabel.minutes") %>' name="minutes" type="text" value="">
-					<aui:validator name="required" />
-					<aui:validator name="digits" />
-				</aui:input>
-				
-				<aui:input label='<%= res.getString("formlabel.comments") %>' name="comments" type="textarea" value="" >
-		     		<aui:validator name="custom" errorMessage="error-character-not-valid">
-					    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
-					</aui:validator>
-				</aui:input>
-				
-				<% 
-				Calendar dedicationDate = CalendarFactoryUtil.getCalendar();
-				dedicationDate.setTime(dedicationDate.getTime());
-				%>
-				<aui:input label='<%= res.getString("formlabel.dedicationdate") %>' name="dedicationDate" model="<%= TimeBox.class %>" bean="<%= tbBean %>" value="<%= dedicationDate %>" />
-				
-			</aui:fieldset>
-	   
-	   <aui:button type="submit" />
-	</aui:form>
-	
+		
+		<p class="cooler-label"><b><%= res.getString("jspaddtimebox.maintitle") %></b></p>
+			
+		<% 
+			PortletURL rUrl = renderResponse.createRenderURL();
+			rUrl.setParameter("jspPage", "/jsp/show_timebox.jsp");
+			rUrl.setParameter("projectId", Long.toString(p.getProjectId()));
+			//System.out.println("redirecURL:"+rUrl); 
+		%>
+		<portlet:actionURL var="addTimeBoxURL" name="addTimeBox">
+			<portlet:param name="redirectURL" value="<%= rUrl.toString() %>" />
+		</portlet:actionURL>
+		
+		
+		
+		<aui:form name="frm_add_timebox" action="<%= addTimeBoxURL %>" method="post">
+			
+			<aui:input type="hidden" name="redirectURL" value="<%= rUrl.toString() %>"/>
+			<aui:input type="hidden" name="projectId" value="<%= projectId %>"/>
+		 	
+		 		<aui:fieldset>
+		
+					<aui:input label='<%= res.getString("formlabel.minutes") %>' name="minutes" type="text" value="">
+						<aui:validator name="required" />
+						<aui:validator name="digits" />
+					</aui:input>
+					
+					<aui:input label='<%= res.getString("formlabel.comments") %>' name="comments" type="textarea" value="" >
+			     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+						    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+						</aui:validator>
+					</aui:input>
+					
+					<% 
+					Calendar dedicationDate = CalendarFactoryUtil.getCalendar();
+					dedicationDate.setTime(dedicationDate.getTime());
+					%>
+					<aui:input label='<%= res.getString("formlabel.dedicationdate") %>' name="dedicationDate" model="<%= TimeBox.class %>" bean="<%= tbBean %>" value="<%= dedicationDate %>" />
+					
+					<aui:button type="submit" value='<%= res.getString("formlabel.actionadd") %>' />
+					
+				</aui:fieldset>	   
+		   
+		</aui:form>
 	
 	</aui:column>				
  	
@@ -210,8 +210,8 @@ if(request.isUserInRole("MpwcManager")){
 	try{
 		System.out.println("search2:"+ searchContainer.getCurParam()+" - "+searchContainer.getIteratorURL());
 		
-		List<Worker> workerResults = WorkerLocalServiceUtil.getWorkersByFilters(null, null, null, null, null, null);
-		//List<Worker> tempResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
+		//List<Worker> workerResults = WorkerLocalServiceUtil.getWorkersByFilters(null, null, null, null, null, null);
+		List<Worker> workerResults = ProjectLocalServiceUtil.getProjectWorkers(p.getProjectId());
 		results = ListUtil.subList(workerResults, searchContainer.getStart(),searchContainer.getEnd());
 		total = workerResults.size();
 		pageContext.setAttribute("results", results);
@@ -224,10 +224,23 @@ if(request.isUserInRole("MpwcManager")){
 	 </liferay-ui:search-container-results>
 	 
 	 <liferay-ui:search-container-row className="com.mpwc.model.Worker" keyProperty="workerId" modelVar="worker">
-	 	<liferay-ui:search-container-column-text name="Name" property="name" />
-	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
-	 	<liferay-ui:search-container-column-text name="Nif" property="nif" />
-	 	<liferay-ui:search-container-column-text name="Email" property="email" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.name") %>' property="name" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.surname") %>' property="surname" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.nif") %>' property="nif" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.email") %>' property="email" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.minutes") %>'>
+	 	<%
+	 	long totalMin = 0;
+	 	try{
+			totalMin = TimeBoxLocalServiceUtil.totalizeTimeboxByProjectWorker(p.getProjectId(), worker.getWorkerId());
+			System.out.println("show_timebox.jsp row prooject id:"+p.getProjectId()+"-worker:"+worker.getWorkerId());
+	 	} catch(Exception e){
+	 		totalMin = -1;
+	 		System.out.println("show_timebox.jsp col min:"+e.getMessage());
+	 	}
+		%>
+		<%= totalMin %>
+	 	</liferay-ui:search-container-column-text>
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />

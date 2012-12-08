@@ -70,7 +70,7 @@ System.out.println("list_actions_edit.jsp:"+projectId);
 		<portlet:param name="workerId" value="<%=primKey %>" />
 	</portlet:actionURL>
 	
-	<liferay-ui:icon image="add" message="Add" url="<%= addProjectWorkerURL.toString() %>" />
+	<liferay-ui:icon image="add" message="formlabel.actionadd" url="<%= addProjectWorkerURL.toString() %>" />
 
 </liferay-ui:icon-menu>
 

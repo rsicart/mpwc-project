@@ -484,4 +484,71 @@ public class ProjectPortlet extends MVCPortlet {
      	actionResponse.sendRedirect(redirectURL);
 	}
 	
+	
+	public void editTimeBox(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException{
+     	
+    	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+    	
+    	long timeBoxId = Long.parseLong(actionRequest.getParameter("timeBoxId"));
+    	long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+    	long minutes = Long.parseLong(actionRequest.getParameter("minutes"));
+     	String comments = actionRequest.getParameter("comments");
+     	
+		int dYear = ParamUtil.getInteger(actionRequest,"dedicationDateYear");
+		int dMonth = ParamUtil.getInteger(actionRequest,"dedicationDateMonth");
+		int dDay = ParamUtil.getInteger(actionRequest,"dedicationDateDay");
+		Date dd = PortalUtil.getDate(dMonth, dDay, dYear);
+     	
+     	System.out.println("editTimeBox editing:" +" - "+ projectId +" - "+ minutes +" - "+ dd.getTime() + " - "+comments );
+     	
+     	Date now = new Date();
+     	
+     	if(	projectId > 0 && timeBoxId > 0 && minutes > 0 && dd != null ){
+     		
+ 	    	TimeBox tb;
+ 			try {
+ 				//get timebox
+ 				tb = TimeBoxLocalServiceUtil.getTimeBox(timeBoxId);
+ 				//set new data
+ 				tb.setMinutes(minutes);
+	    		tb.setDedicationDate(dd);					
+ 		    	
+ 		        if( comments != null && comments.length() > 0 ){ tb.setComments(comments); }
+ 		    	
+ 		        //set last modification date
+ 		        tb.setModifiedDate(now); 		    	
+ 		    	
+ 		        //save changes
+ 				TimeBoxLocalServiceUtil.updateTimeBox(tb);
+ 		    	
+ 		    	System.out.println("editTimeBox -" + "groupId:" + tb.getGroupId() + "companyId:" + tb.getCompanyId()+ " - comments:"+tb.getComments());
+ 		    	
+ 			} catch (Exception e) {
+ 				System.out.println("editTimeBox exception:" + e.getMessage());
+			}
+
+     	}
+
+     	// gracefully redirecting to the default portlet view
+     	String redirectURL = actionRequest.getParameter("redirectURL");
+     	actionResponse.sendRedirect(redirectURL);
+	}
+	
+	
+	public void deleteTimeBox(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException{
+		long result = -1;
+		long timeBoxId = ParamUtil.getLong(actionRequest, "timeBoxId");
+		System.out.println("deleteTimeBox portlet: delete ->"+timeBoxId);
+		try{
+			result = TimeBoxLocalServiceUtil.delete(timeBoxId);
+		} catch(Exception e){
+			result = -1;
+			System.out.println("deleteTimeBox exception:"+e.getMessage());
+		}
+		
+     	// gracefully redirecting to the default portlet view
+     	String redirectURL = actionRequest.getParameter("redirectURL");
+     	actionResponse.sendRedirect(redirectURL);
+	}
+	
 }
