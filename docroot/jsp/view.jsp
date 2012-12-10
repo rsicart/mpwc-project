@@ -246,10 +246,17 @@ POSSIBILITY OF SUCH DAMAGE.
 		</aui:fieldset>
 		</aui:column>
 
-		<aui:column columnWidth="5">
+		<aui:column columnWidth="30">
 		<aui:fieldset>
-		    
-			<aui:button type="submit" id="btn_filter" value='<%= res.getString("formlabel.actionfilter") %>' />
+		    <aui:button-row>
+		    	<aui:button type="submit" id="btn_filter" value='<%= res.getString("formlabel.actionfilter") %>' />
+		    	<c:if test="<%= permissionChecker.hasPermission(groupId, namePortlet, primKeyPortlet, permAddProject) %>">
+		    		<portlet:actionURL var="preAddProjectURL" name="preAddProject">
+						<portlet:param name="jspPage" value="/jsp/add.jsp"/>
+					</portlet:actionURL>
+					<aui:button type="button" name="btn_add" value='<%= res.getString("formlabel.actionadd") %>' onClick="<%= preAddProjectURL.toString() %>" />
+				</c:if>
+		    </aui:button-row>
 					
 		</aui:fieldset>
 		
@@ -257,29 +264,7 @@ POSSIBILITY OF SUCH DAMAGE.
 	
 		</aui:form>
 		
-		<aui:column columnWidth="25" last="true">
-		
-		<aui:fieldset>
-		
-			<portlet:actionURL var="preAddProjectURL" name="preAddProject">
-				<portlet:param name="jspPage" value="/jsp/add.jsp"/>
-			</portlet:actionURL>
-	 		
-	 		<aui:form name="frm_add_project" action="<%= preAddProjectURL %>" method="post">
-	 	
-			 	<aui:fieldset>
-			 	
-			 	<c:if test="<%= permissionChecker.hasPermission(groupId, namePortlet, primKeyPortlet, permAddProject) %>">
-			 		<aui:button type="submit" id="btn_add" value='<%= res.getString("formlabel.actionadd") %>' inlineField="false" />
-			 	</c:if> 	
-			 	
-			 	</aui:fieldset>
-		 	
-		 	</aui:form>	
-		
-		</aui:fieldset>		
-		
-		</aui:column>
+
 			
 	</aui:layout>
 

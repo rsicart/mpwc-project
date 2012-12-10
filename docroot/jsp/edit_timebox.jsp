@@ -110,21 +110,27 @@ TimeBox tb = TimeBoxLocalServiceUtil.getTimeBox(tbId);
 	
    </aui:layout>
    
-   <aui:button type="submit" value="<%= res.getString("formlabel.actionadd") %>" />
+   <aui:button-row>
+   	
+	   	<aui:button type="submit" value="<%= res.getString("formlabel.actionadd") %>" />
+	   
+		<portlet:actionURL name="deleteTimeBox" var="deleteURL">
+			<portlet:param name="projectId" value="<%= Long.toString(projectId) %>" />
+			<portlet:param name="timeBoxId" value="<%= Long.toString(tbId) %>" />
+			<portlet:param name="redirectURL" value="<%= redirectURL.toString() %>" />
+		</portlet:actionURL>
+	   	<aui:button type="button" name="btn_delete" value="<%= res.getString("formlabel.actiondelete") %>" onClick="<%= deleteURL.toString() %>" />
+	   
+	   	<portlet:renderURL var="listURL">
+	    	<portlet:param name="mvcPath" value="/jsp/view.jsp" />
+		</portlet:renderURL>
+		<aui:button type="cancel" onClick="<%= listURL.toString() %>" />
    
-   
-	<portlet:actionURL name="deleteTimeBox" var="deleteURL">
-		<portlet:param name="projectId" value="<%= Long.toString(projectId) %>" />
-		<portlet:param name="timeBoxId" value="<%= Long.toString(tbId) %>" />
-		<portlet:param name="redirectURL" value="<%= redirectURL.toString() %>" />
-	</portlet:actionURL>
-   <aui:button type="button" name="btn_delete" value="<%= res.getString("formlabel.actiondelete") %>" onClick="<%= deleteURL.toString() %>" />
-   
+   </aui:button-row>
 </aui:form>
 
 
-<portlet:renderURL var="listURL">
-    <portlet:param name="mvcPath" value="/jsp/view.jsp" />
-</portlet:renderURL>
-
-<p><a href="<%= listURL %>">&larr; Back</a></p>
+   
+   	
+   	
+   

@@ -257,8 +257,9 @@ if(request.isUserInRole("MpwcManager")){
 %>	
 
 
-<portlet:renderURL var="listURL">
-    <portlet:param name="mvcPath" value="/jsp/view.jsp" />
-</portlet:renderURL>
-
-<p><a href="<%= listURL %>">&larr; Back</a></p>
+   <aui:button-row>  	
+   	<portlet:renderURL var="listURL">
+    	<portlet:param name="mvcPath" value="/jsp/view.jsp" />
+	</portlet:renderURL>
+	<aui:button type="cancel" onClick="<%= listURL.toString() %>" />
+   </aui:button-row>

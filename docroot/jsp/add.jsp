@@ -167,12 +167,12 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 	
    </aui:layout>
    
-   <aui:button type="submit" />
+   <aui:button-row>
+   	<aui:button type="submit" />
+   	
+   	<portlet:renderURL var="listURL">
+    	<portlet:param name="mvcPath" value="/jsp/view.jsp" />
+	</portlet:renderURL>
+	<aui:button type="cancel" onClick="<%= listURL.toString() %>" />
+   </aui:button-row>
 </aui:form>
-
-
-<portlet:renderURL var="listURL">
-    <portlet:param name="mvcPath" value="/jsp/view.jsp" />
-</portlet:renderURL>
-
-<p><a href="<%= listURL %>">&larr; Back</a></p>
