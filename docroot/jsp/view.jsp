@@ -305,15 +305,15 @@ POSSIBILITY OF SUCH DAMAGE.
 	 </liferay-ui:search-container-results>
 	 
 	 <liferay-ui:search-container-row className="com.mpwc.model.Project" keyProperty="projectId" modelVar="project">
-	 	<liferay-ui:search-container-column-text name="Name" property="name" />
-	 	<liferay-ui:search-container-column-text name="Project Type" property="type" />
-	 	<liferay-ui:search-container-column-text name="Desc. Short" property="descShort" />
-	 	<liferay-ui:search-container-column-text name="Start Date" property="startDate" />
-	 	<liferay-ui:search-container-column-text name="End Date" property="endDate" />
-	 	<liferay-ui:search-container-column-text name="Status" property="projectStatusId" />
-	 	<liferay-ui:search-container-column-text name="Cost estimated (EUR)" property="costEstimatedEuros" />
-	 	<liferay-ui:search-container-column-text name="Time estimated (Hours)" property="timeEstimatedHours" />
-	 	<liferay-ui:search-container-column-text name="Time set?" property="canSetWorkerHours" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.projectname") %>' property="name" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.type") %>' property="type" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.projectdescshort") %>' property="descShort" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.startdate") %>' property="startDate" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.enddate") %>' property="endDate" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.status") %>' property="projectStatusId" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.projectcostestimated") %>' property="costEstimatedEuros" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.projecttimeestimated") %>' property="timeEstimatedHours" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.projectcansethours") %>' property="canSetWorkerHours" />
 	 	<liferay-ui:search-container-column-jsp path="/jsp/list_actions.jsp" align="right" />
 	 </liferay-ui:search-container-row>
 	 

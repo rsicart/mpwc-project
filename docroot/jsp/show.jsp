@@ -158,9 +158,9 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 	 </liferay-ui:search-container-results>
 	 
 	 <liferay-ui:search-container-row className="com.mpwc.model.Worker" keyProperty="workerId" modelVar="worker">
-	 	<liferay-ui:search-container-column-text name="Name" property="name" />
-	 	<liferay-ui:search-container-column-text name="Surame" property="surname" />
-	 	<liferay-ui:search-container-column-text name="Email" property="email" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.name") %>' property="name" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.surname") %>' property="surname" />
+	 	<liferay-ui:search-container-column-text name='<%= res.getString("formlabel.email") %>' property="email" />
 	 </liferay-ui:search-container-row>
 	 
 	 <liferay-ui:search-iterator />
