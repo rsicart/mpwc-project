@@ -58,8 +58,6 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 
 %>
 
-<h1><%= res.getString("jspshow.maintitle") %></h1>
-
 <%
 	long projectId = Long.valueOf( renderRequest.getParameter("projectId") );
 
@@ -69,13 +67,26 @@ String permAddWorker = "ADD_WORKER_PROJECT";
 
 %>
 
+	<h2><%= p.getName() %></h2>
+
 	<aui:layout>
  		
  	<aui:column columnWidth="50" first="true">
  	
 
-
-		<p class="cooler-label"><%= res.getString("formlabel.projectname") %></p><p class="cooler-field"><%= p.getName() %></p>
+		<% 
+			String customer = res.getString("error-notassigned-project-contact");
+			if( p.getContactoId() > 0 ){
+				try{
+					Contacto c = ContactoLocalServiceUtil.getContacto(p.getContactoId());
+					customer = c.getFirmname();
+				} catch(Exception e){
+					//can't find contact
+					customer = res.getString("error-notassigned-project-contact");
+				}
+			}
+		%>
+		<p class="cooler-label"><%= res.getString("form-option-type-customer") %></p><p class="cooler-field"><%= customer %></p>
 
 		<p class="cooler-label"><%= res.getString("formlabel.projectdescshort") %></p><p class="cooler-field"><%= p.getDescShort() %></p>
 		

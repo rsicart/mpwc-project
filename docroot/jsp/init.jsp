@@ -69,6 +69,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="com.mpwc.model.Project" %>
 <%@ page import="com.mpwc.model.ProjectStatus" %>
 <%@ page import="com.mpwc.model.TimeBox" %>
+<%@ page import="com.mpwc.model.Contacto" %>
 <%@ page import="com.mpwc.service.persistence.WorkerFinderUtil"%>
 <%@ page import="com.mpwc.service.persistence.WorkerFinder"%>
 <%@ page import="com.mpwc.service.WorkerLocalServiceUtil" %>
@@ -76,6 +77,7 @@ POSSIBILITY OF SUCH DAMAGE.
 <%@ page import="com.mpwc.service.ProjectLocalServiceUtil" %>
 <%@ page import="com.mpwc.service.ProjectStatusLocalServiceUtil" %>
 <%@ page import="com.mpwc.service.TimeBoxLocalServiceUtil" %>
+<%@ page import="com.mpwc.service.ContactoLocalServiceUtil" %>
 
 <%@ page import="javax.portlet.PortletURL" %>
 <%@ page import="javax.portlet.PortletPreferences" %>
