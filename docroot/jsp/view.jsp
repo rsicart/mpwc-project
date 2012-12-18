@@ -155,7 +155,9 @@ POSSIBILITY OF SUCH DAMAGE.
 		
 			<aui:input label='<%= res.getString("formlabel.name") %>' id="ftrname" name="ftrname" type="text" value="<%= ftrName %>">
 				<!-- Only allow alphabetical characters -->
-	     		<aui:validator name="alpha" />
+	     		<aui:validator name="custom" errorMessage="error-character-not-valid">
+				    function(val, fieldNode, ruleValue) { var patt=/[a-zA-Z0-9 ,'-]{0,100}/g; return (patt.test(val) ) }
+				</aui:validator>
 			</aui:input>
 	
 			<aui:input label='<%= res.getString("formlabel.projectdescshort") %>' id="ftrdescshort" name="ftrdescshort" type="text" value="<%= ftrDescShort %>" >
