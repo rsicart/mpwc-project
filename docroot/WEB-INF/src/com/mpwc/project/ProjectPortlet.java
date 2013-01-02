@@ -322,8 +322,8 @@ public class ProjectPortlet extends MVCPortlet {
     public void addProjectWorker(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
     	try{
     		//get params
-    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-        	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
+    		long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+        	long workerId = ParamUtil.getLong(actionRequest, "workerId", 0);
         	
         	if(projectId > 0 && workerId > 0){
 	        	//add worker to project
@@ -348,8 +348,8 @@ public class ProjectPortlet extends MVCPortlet {
     public void delProjectWorker(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
     	try{
     		//get params
-    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-        	long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
+    		long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+        	long workerId = ParamUtil.getLong(actionRequest, "workerId", 0);
         	
         	if(projectId > 0 && workerId > 0){
 	        	////delete worker from project
@@ -374,7 +374,7 @@ public class ProjectPortlet extends MVCPortlet {
     public void deleteProject(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
     	try{
     		//get params
-    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
+    		long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
         	
         	if(projectId > 0){
 	        	ProjectLocalServiceUtil.deleteProject(projectId);
@@ -394,8 +394,8 @@ public class ProjectPortlet extends MVCPortlet {
     public void setProjectManager(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException, SystemException{
     	try{
     		//get params
-    		long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-    		long workerId = Long.parseLong(actionRequest.getParameter("workerId"));
+    		long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+    		long workerId = ParamUtil.getLong(actionRequest, "workerId", 0);
         	
         	if(projectId > 0 && workerId > 0){
 	        	Project p = ProjectLocalServiceUtil.getProject(projectId);
@@ -429,9 +429,9 @@ public class ProjectPortlet extends MVCPortlet {
 	     	
     	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
     	
-    	long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-    	long minutes = Long.parseLong(actionRequest.getParameter("minutes"));
-     	String comments = actionRequest.getParameter("comments");
+    	long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+    	long minutes = ParamUtil.getLong(actionRequest, "minutes", 0);
+     	String comments = ParamUtil.getString(actionRequest, "comments", "");
      	
 		int dYear = ParamUtil.getInteger(actionRequest,"dedicationDateYear");
 		int dMonth = ParamUtil.getInteger(actionRequest,"dedicationDateMonth");
@@ -495,10 +495,10 @@ public class ProjectPortlet extends MVCPortlet {
      	
     	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
     	
-    	long timeBoxId = Long.parseLong(actionRequest.getParameter("timeBoxId"));
-    	long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-    	long minutes = Long.parseLong(actionRequest.getParameter("minutes"));
-     	String comments = actionRequest.getParameter("comments");
+    	long timeBoxId = ParamUtil.getLong(actionRequest, "timeBoxId", 0);
+    	long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+    	long minutes = ParamUtil.getLong(actionRequest, "minutes", 0);
+     	String comments = ParamUtil.getString(actionRequest, "comments", "");
      	
 		int dYear = ParamUtil.getInteger(actionRequest,"dedicationDateYear");
 		int dMonth = ParamUtil.getInteger(actionRequest,"dedicationDateMonth");
@@ -543,7 +543,7 @@ public class ProjectPortlet extends MVCPortlet {
 	
 	public void deleteTimeBox(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException, PortletException{
 		long result = -1;
-		long timeBoxId = ParamUtil.getLong(actionRequest, "timeBoxId");
+		long timeBoxId = ParamUtil.getLong(actionRequest, "timeBoxId", 0);
 		System.out.println("deleteTimeBox portlet: delete ->"+timeBoxId);
 		try{
 			result = TimeBoxLocalServiceUtil.delete(timeBoxId);
