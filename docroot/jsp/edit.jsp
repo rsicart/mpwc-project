@@ -135,9 +135,6 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
 		<aui:fieldset>
 		
 			<aui:select label='<%= res.getString("formlabel.projecttype") %>' name="type">
-				<aui:option value="-1">
-					<liferay-ui:message key="please-choose" />
-				</aui:option>
 				<aui:option value="project" selected='<%= ( p.getType().equals("project") ? true : false ) %>'>
 					<liferay-ui:message key="form-option-type-project" />
 				</aui:option>
@@ -147,9 +144,6 @@ iteratorURL.setParameter("projectId", Long.toString(projectId));
 			</aui:select>
 			
 			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
-				<aui:option value="-1">
-					<liferay-ui:message key="please-choose" />
-				</aui:option>
 				<aui:option label='<%= res.getString("formlabel.option.active") %>' value="1" selected='<%= ( p.getProjectStatusId()==1 ? true : false ) %>'></aui:option>
 				<aui:option label='<%= res.getString("formlabel.option.inactive") %>' value="2" selected='<%= ( p.getProjectStatusId()==2 ? true : false ) %>'></aui:option>
 				<aui:option label='<%= res.getString("formlabel.option.bloqued") %>' value="3" selected='<%= ( p.getProjectStatusId()==3 ? true : false ) %>'></aui:option>

@@ -99,19 +99,25 @@ public class ProjectPortlet extends MVCPortlet {
 	     	
 	    	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	    	
-	     	String name = actionRequest.getParameter("name");
-	     	String type = actionRequest.getParameter("type");
-	     	String descShort = actionRequest.getParameter("descshort");
-	     	String descFull = actionRequest.getParameter("descfull");
-	     	double cost = Double.valueOf(actionRequest.getParameter("costestimatedeuros"));
-	     	long time = Long.parseLong(actionRequest.getParameter("timeestimatedhours"));
-	     	boolean canSetTime = Boolean.valueOf(actionRequest.getParameter("cansetworkerhours"));
-	     	String startDate = actionRequest.getParameter("startDate");
-	     	String endDate = actionRequest.getParameter("endDate");
-	     	startDate ="2000-01-01";
-	     	endDate ="2000-01-02";
-	     	String comments = actionRequest.getParameter("comments");
-	     	long status = Long.parseLong(actionRequest.getParameter("status"));
+	     	String name = ParamUtil.getString(actionRequest, "name", "");
+	     	
+	     	//default type: project
+	     	String type = ParamUtil.getString(actionRequest, "type", "project");
+	     	if(type.equals("")){ type = "project"; }
+	     	
+	     	String descShort = ParamUtil.getString(actionRequest, "descshort", "");
+	     	String descFull = ParamUtil.getString(actionRequest, "descfull", "");
+	     	double cost = ParamUtil.getDouble(actionRequest, "costestimatedeuros", 0);
+	     	long time = ParamUtil.getLong(actionRequest, "timeestimatedhours", 0);    	
+	     	boolean canSetTime = ParamUtil.getBoolean(actionRequest, "cansetworkerhours", false);
+	     	String startDate = ParamUtil.getString(actionRequest, "startDate", "");
+	     	String endDate = ParamUtil.getString(actionRequest, "endDate", "");
+	     	
+	     	String comments = ParamUtil.getString(actionRequest, "comments", "");
+	     	
+	     	//default active, if we get null or -1 (please choose... select option)
+	     	long status = ParamUtil.getLong(actionRequest, "status", 1);
+	     	if(status < 0){ status = 1; }
 	     	
 	     	System.out.println("addProject adding:" +" - "+ name +" - "+ type +" - "+ descShort +" - "+ 
 	     			descFull +" - "+ cost +" - "+ time +" - "+ canSetTime +" - "+ startDate +" - "+
@@ -121,8 +127,8 @@ public class ProjectPortlet extends MVCPortlet {
 	     	
 	     	if(		name != null && !name.isEmpty() &&
 	     			type != null && !type.isEmpty() &&
-	     			descShort != null && !descShort.isEmpty() &&
-	     			descFull != null && !descFull.isEmpty() &&
+	     			descShort != null &&
+	     			descFull != null &&
 	     			!Double.isNaN(cost) &&
 	     			time >= 0
 	     		){
@@ -135,8 +141,8 @@ public class ProjectPortlet extends MVCPortlet {
 	 		    	p.setType(type);
 	 		    	p.setDescShort(descShort);
 	 		    	p.setDescFull(descFull);
-	 		    	if( cost > 0 ){ p.setCostEstimatedEuros(cost); }
-	 		    	if( time > 0 ){ p.setTimeEstimatedHours(time); }
+	 		    	if( cost >= 0 ){ p.setCostEstimatedEuros(cost); }
+	 		    	if( time >= 0 ){ p.setTimeEstimatedHours(time); }
 	 		    	if( canSetTime ){ p.setCanSetWorkerHours(canSetTime); }
 	 		    	if( status > 0 ){ p.setProjectStatusId(status); }
 
@@ -190,20 +196,20 @@ public class ProjectPortlet extends MVCPortlet {
 	     	
 	    	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	    	
-	    	long projectId = Long.parseLong(actionRequest.getParameter("projectId"));
-	     	String name = actionRequest.getParameter("name");
-	     	String type = actionRequest.getParameter("type");
-	     	String descShort = actionRequest.getParameter("descshort");
-	     	String descFull = actionRequest.getParameter("descfull");
-	     	double cost = Double.valueOf(actionRequest.getParameter("costestimatedeuros"));
-	     	long time = Long.parseLong(actionRequest.getParameter("timeestimatedhours"));
-	     	boolean canSetTime = Boolean.valueOf(actionRequest.getParameter("cansetworkerhours"));
-	     	String startDate = actionRequest.getParameter("startDate");
-	     	String endDate = actionRequest.getParameter("endDate");
+	    	long projectId = ParamUtil.getLong(actionRequest, "projectId", 0);
+	     	String name = ParamUtil.getString(actionRequest, "name", "");
+	     	String type = ParamUtil.getString(actionRequest, "type", "");
+	     	String descShort = ParamUtil.getString(actionRequest, "descshort", "");
+	     	String descFull = ParamUtil.getString(actionRequest, "descfull", "");
+	     	double cost = ParamUtil.getDouble(actionRequest, "costestimatedeuros", 0);
+	     	long time = ParamUtil.getLong(actionRequest, "timeestimatedhours", 0);
+	     	boolean canSetTime = ParamUtil.getBoolean(actionRequest, "cansetworkerhours", false);
+	     	String startDate = ParamUtil.getString(actionRequest, "startDate", "");
+	     	String endDate = ParamUtil.getString(actionRequest, "endDate", "");
 	     	startDate ="2000-01-01";
 	     	endDate ="2000-01-02";
-	     	String comments = actionRequest.getParameter("comments");
-	     	long status = Long.parseLong(actionRequest.getParameter("status"));
+	     	String comments = ParamUtil.getString(actionRequest, "comments", "");
+	     	long status = ParamUtil.getLong(actionRequest, "status", 0);
 	     	
 	     	System.out.println("editProject adding:" +" - "+ name +" - "+ type +" - "+ descShort +" - "+ 
 	     			descFull +" - "+ cost +" - "+ time +" - "+ canSetTime +" - "+ startDate +" - "+
@@ -213,8 +219,8 @@ public class ProjectPortlet extends MVCPortlet {
 	     	
 	     	if(		name != null && !name.isEmpty() &&
 	     			type != null && !type.isEmpty() &&
-	     			descShort != null && !descShort.isEmpty() &&
-	     			descFull != null && !descFull.isEmpty() &&
+	     			descShort != null &&
+	     			descFull != null &&
 	     			!Double.isNaN(cost) &&
 	     			projectId > 0
 	     		){
@@ -274,13 +280,13 @@ public class ProjectPortlet extends MVCPortlet {
   	       throws IOException, PortletException{
 	 	 try{
 			//get params
- 		 	String name = actionRequest.getParameter("ftrname");
- 		 	String type = actionRequest.getParameter("ftrtype");	
- 		 	String descShort = actionRequest.getParameter("ftrdescshort");
-			String status = actionRequest.getParameter("ftrstatus");
-			String costEstimatedEuros = actionRequest.getParameter("ftrcostestimatedeuros");
-			String timeEstimatedHours = actionRequest.getParameter("ftrtimeestimatedhours");
-			String canSetWorkerHours = actionRequest.getParameter("ftrcansetworkerhours");
+ 		 	String name = ParamUtil.getString(actionRequest, "ftrname", "");
+ 		 	String type = ParamUtil.getString(actionRequest, "ftrtype", "");	
+ 		 	String descShort = ParamUtil.getString(actionRequest, "ftrdescshort", "");
+			String status = ParamUtil.getString(actionRequest, "ftrstatus", "");
+			String costEstimatedEuros = ParamUtil.getString(actionRequest, "ftrcostestimatedeuros", "");
+			String timeEstimatedHours = ParamUtil.getString(actionRequest, "ftrtimeestimatedhours", "");
+			String canSetWorkerHours = ParamUtil.getString(actionRequest, "ftrcansetworkerhours", "");
 			//start date
 			int sYear = ParamUtil.getInteger(actionRequest,"startDateYear");
  			int sMonth = ParamUtil.getInteger(actionRequest,"startDateMonth");

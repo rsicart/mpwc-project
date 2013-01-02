@@ -130,7 +130,7 @@ ResourceBundle res = ResourceBundle.getBundle("content.Language-ext", new Locale
 				</aui:option>
 			</aui:select>
 			
-			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">
+			<aui:select label='<%= res.getString("formlabel.status") %>' name="status">		
 				<aui:option value="-1">
 					<liferay-ui:message key="please-choose" />
 				</aui:option>
